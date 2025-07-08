@@ -1,0 +1,53 @@
+------------------------------------------------------------
+Starting Federated Learning Server...
+------------------------------------------------------------
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.7436
+Total Examples: 420
+Individual Client Recalls: [0.7846153846153846, 0.6615384615384615, 0.7846153846153846]
+===================================
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.8256
+Total Examples: 420
+Individual Client Recalls: [0.8461538461538461, 0.8615384615384616, 0.7692307692307693]
+===================================
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.8564
+Total Examples: 420
+Individual Client Recalls: [0.8769230769230769, 0.8, 0.8923076923076924]
+===================================
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.8615
+Total Examples: 420
+Individual Client Recalls: [0.8923076923076924, 0.8769230769230769, 0.8153846153846154]
+===================================
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.8872
+Total Examples: 420
+Individual Client Recalls: [0.9230769230769231, 0.8615384615384616, 0.8769230769230769]
+===================================
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.8923
+Total Examples: 420
+Individual Client Recalls: [0.8615384615384616, 0.9230769230769231, 0.8923076923076924]
+===================================
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.8872
+Total Examples: 420
+Individual Client Recalls: [0.8615384615384616, 0.8923076923076924, 0.9076923076923077]
+===================================
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9077
+Total Examples: 420
+Individual Client Recalls: [0.9384615384615385, 0.8769230769230769, 0.9076923076923077]
+===================================
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9077
+Total Examples: 420
+Individual Client Recalls: [0.9384615384615385, 0.9076923076923077, 0.8769230769230769]
+===================================
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9077
+Total Examples: 420
+Individual Client Recalls: [0.8769230769230769, 0.9076923076923077, 0.9384615384615385]
+===================================
