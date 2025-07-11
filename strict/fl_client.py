@@ -8,8 +8,6 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from dataset import load_dataset
 from preprocessing import basic_cleaning
 from modifications import remove_outliers, feature_engineering, scale_features, select_features
-from client_augment import augment_client_data  # ✅ NEW IMPORT
-
 import os
 import sys
 from datetime import datetime
@@ -122,10 +120,6 @@ if __name__ == "__main__":
     print("-" * 60)
     print("Loading and preprocessing client data...")
 
-    # Get client ID and malicious flag from command line
-    client_id = int(sys.argv[1]) if len(sys.argv) > 1 else np.random.randint(0, 1000)
-    is_malicious = len(sys.argv) > 2 and sys.argv[2].lower() in ["mal", "malicious", "--mal"]   
-
     df = load_dataset()
     df = basic_cleaning(df)
     X = df.drop('HeartDisease', axis=1)
@@ -134,37 +128,26 @@ if __name__ == "__main__":
     X = feature_engineering(X)
     X = scale_features(X)
     X = select_features(X, y)
+
+    # Get client ID from command line argument or use random seed
+    import sys
+    client_id = int(sys.argv[1]) if len(sys.argv) > 1 else np.random.randint(0, 1000)
     
     # Stratified split to preserve class balance per client - different seed per client
     splitter = StratifiedShuffleSplit(n_splits=1, test_size=0.8, random_state=client_id)
     for train_idx, _ in splitter.split(X, y):
-        X_part = X.iloc[train_idx].values
-        y_part = y.iloc[train_idx].values
-
+        X_part = X.iloc[train_idx]
+        y_part = y.iloc[train_idx]
+    
     print(f"Client ID: {client_id}")
     print(f"Random seed used: {client_id}")
-    print(f"Malicious client? {'✅ YES' if is_malicious else '❌ NO'}")
+
     print("Class distribution in this client:")
-    print(np.bincount(y_part))
-    print("Data shape before augmentation:", X_part.shape)
+    print(y_part.value_counts())
+    print("Data shape:", X_part.shape)
     print("-" * 60)
 
-    if is_malicious:
-        print("⚠️  Malicious behavior: Partially flipping labels")
-        flip_fraction = 1.0  # Flip 30% of labels
-        flip_indices = np.random.choice(len(y_part), size=int(len(y_part) * flip_fraction), replace=False)
-        y_part[flip_indices] = 1 - y_part[flip_indices]
-
-
-    # ✅ Augment the client data before training
-    X_aug, y_aug = augment_client_data(X_part, y_part, target_size=2000, method="combined")
-
-    print("✅ Client data augmented")
-    print("New shape:", X_aug.shape)
-    print("New class distribution:", np.bincount(y_aug))
-    print("-" * 60)
-
-    client = HeartClient(X_aug, y_aug)
+    client = HeartClient(X_part, y_part)
 
     print("Starting Federated Learning Client...")
     print("-" * 60)
