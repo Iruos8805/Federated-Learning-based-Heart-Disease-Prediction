@@ -1,0 +1,232 @@
+------------------------------------------------------------
+🚀 Starting Federated Learning Server with GSV Defense
+------------------------------------------------------------
+🔧 Initializing Gradient Signature Verifier...
+📊 Loading validation data...
+Loaded dataset from: ./heart.csv
+------------------------------------------------------------
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 918 entries, 0 to 917
+Data columns (total 12 columns):
+ #   Column          Non-Null Count  Dtype  
+---  ------          --------------  -----  
+ 0   Age             918 non-null    int64  
+ 1   Sex             918 non-null    object 
+ 2   ChestPainType   918 non-null    object 
+ 3   RestingBP       918 non-null    int64  
+ 4   Cholesterol     918 non-null    int64  
+ 5   FastingBS       918 non-null    int64  
+ 6   RestingECG      918 non-null    object 
+ 7   MaxHR           918 non-null    int64  
+ 8   ExerciseAngina  918 non-null    object 
+ 9   Oldpeak         918 non-null    float64
+ 10  ST_Slope        918 non-null    object 
+ 11  HeartDisease    918 non-null    int64  
+dtypes: float64(1), int64(6), object(5)
+memory usage: 86.2+ KB
+None
+Missing values:
+ Age               0
+Sex               0
+ChestPainType     0
+RestingBP         0
+Cholesterol       0
+FastingBS         0
+RestingECG        0
+MaxHR             0
+ExerciseAngina    0
+Oldpeak           0
+ST_Slope          0
+HeartDisease      0
+dtype: int64
+Has Duplicates: False
+------------------------------------------------------------
+Saved boxplot to ./EDA/boxplot.png
+------------------------------------------------------------
+Removed 216 outlier rows
+------------------------------------------------------------
+Performed feature engineering
+------------------------------------------------------------
+Scaled numerical features
+------------------------------------------------------------
+Selected 23 features: ['Age', 'RestingBP', 'Cholesterol', 'FastingBS', 'MaxHR', 'Oldpeak', 'Sex_F', 'Sex_M', 'ChestPainType_ASY', 'ChestPainType_ATA', 'ChestPainType_NAP', 'ChestPainType_TA', 'RestingECG_LVH', 'RestingECG_Normal', 'RestingECG_ST', 'ExerciseAngina_N', 'ExerciseAngina_Y', 'ST_Slope_Down', 'ST_Slope_Flat', 'ST_Slope_Up', 'AgeGroup_Middle-aged', 'AgeGroup_Senior', 'AgeGroup_Very old']
+------------------------------------------------------------
+✅ Validation set: 211 samples
+✅ Validation data loaded successfully
+🔍 GSV initialized | window: 10 | threshold: 1.8
+✅ GSV strategy initialized successfully
+🔍 Gradient Signature Verification (GSV) activated
+🛡️  Defense system ready for adversarial attack detection
+🧬 GSV Features:
+   - Gradient magnitude distribution analysis
+   - Sign pattern behavioral fingerprinting
+   - Client-specific profile evolution
+   - Adaptive threshold adjustment
+   - Multi-metric anomaly detection
+   - Individual client filtering (not all clients)
+   - Persistent client blocking after detection
+------------------------------------------------------------
+
+🔍 Round 1: GSV Aggregation
+============================================================
+
+🔍 Round 0: GSV Verification
+=======================================================
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2c8a7b0>: Warming up (score: 0.0000)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb42d0>: Warming up (score: 0.0000)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb4cd0>: Warming up (score: 0.0000)
+📊 Acceptance: 3/3 (100.00%)
+🎯 Threshold: 1.8000
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9117
+Total Examples: 6000
+Participating Clients: 3
+Individual Client Recalls: [0.8983903420523138, 0.8790322580645161, 0.9577889447236181]
+===================================
+
+🔍 Round 2: GSV Aggregation
+============================================================
+
+🔍 Round 1: GSV Verification
+=======================================================
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb4cd0>: Warming up (score: 0.0000)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb42d0>: Warming up (score: 0.0000)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2c8a7b0>: Warming up (score: 0.0000)
+📊 Acceptance: 3/3 (100.00%)
+🎯 Threshold: 1.8000
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9134
+Total Examples: 6000
+Participating Clients: 3
+Individual Client Recalls: [0.8800403225806451, 0.9024144869215291, 0.9577889447236181]
+===================================
+
+🔍 Round 3: GSV Aggregation
+============================================================
+
+🔍 Round 2: GSV Verification
+=======================================================
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2c8a7b0>: Warming up (score: 3.5006)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb4cd0>: Warming up (score: 3.5004)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb42d0>: Warming up (score: 3.5003)
+📊 Acceptance: 3/3 (100.00%)
+🎯 Threshold: 1.7910
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9161
+Total Examples: 6000
+Participating Clients: 3
+Individual Client Recalls: [0.9597989949748744, 0.9074446680080482, 0.8810483870967742]
+===================================
+
+🔍 Round 4: GSV Aggregation
+============================================================
+
+🔍 Round 3: GSV Verification
+=======================================================
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb4cd0>: Warming up (score: 2.6052)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb42d0>: Warming up (score: 1.9009)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2c8a7b0>: Warming up (score: 2.6714)
+📊 Acceptance: 3/3 (100.00%)
+🎯 Threshold: 1.7910
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9161
+Total Examples: 6000
+Participating Clients: 3
+Individual Client Recalls: [0.8810483870967742, 0.9074446680080482, 0.9597989949748744]
+===================================
+
+🔍 Round 5: GSV Aggregation
+============================================================
+
+🔍 Round 4: GSV Verification
+=======================================================
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb4cd0>: Warming up (score: 1.0889)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb42d0>: Warming up (score: 1.0494)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2c8a7b0>: Warming up (score: 1.3153)
+📊 Acceptance: 3/3 (100.00%)
+🎯 Threshold: 1.7820
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9181
+Total Examples: 6000
+Participating Clients: 3
+Individual Client Recalls: [0.8830645161290323, 0.9114688128772636, 0.9597989949748744]
+===================================
+
+🔍 Round 6: GSV Aggregation
+============================================================
+
+🔍 Round 5: GSV Verification
+=======================================================
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb4cd0>: Warming up (score: 0.9265)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb42d0>: Warming up (score: 0.6963)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2c8a7b0>: Warming up (score: 1.2370)
+📊 Acceptance: 3/3 (100.00%)
+🎯 Threshold: 1.7731
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9188
+Total Examples: 6000
+Participating Clients: 3
+Individual Client Recalls: [0.9124748490945674, 0.8840725806451613, 0.9597989949748744]
+===================================
+
+🔍 Round 7: GSV Aggregation
+============================================================
+
+🔍 Round 6: GSV Verification
+=======================================================
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb42d0>: Warming up (score: 0.4808)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb4cd0>: Warming up (score: 0.3792)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2c8a7b0>: Warming up (score: 0.9720)
+📊 Acceptance: 3/3 (100.00%)
+🎯 Threshold: 1.7643
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9184
+Total Examples: 6000
+Participating Clients: 3
+Individual Client Recalls: [0.8830645161290323, 0.9124748490945674, 0.9597989949748744]
+===================================
+
+🔍 Round 8: GSV Aggregation
+============================================================
+
+🔍 Round 7: GSV Verification
+=======================================================
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb42d0>: Warming up (score: 0.4246)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb4cd0>: Warming up (score: 0.4391)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2c8a7b0>: Warming up (score: 0.7783)
+📊 Acceptance: 3/3 (100.00%)
+🎯 Threshold: 1.7554
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9188
+Total Examples: 6000
+Participating Clients: 3
+Individual Client Recalls: [0.8840725806451613, 0.9597989949748744, 0.9124748490945674]
+===================================
+
+🔍 Round 9: GSV Aggregation
+============================================================
+
+🔍 Round 8: GSV Verification
+=======================================================
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb42d0>: Warming up (score: 0.6348)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2c8a7b0>: Warming up (score: 0.5934)
+🔁 Client proxy.GrpcClientProxy object at 0x7f73d2cb4cd0>: Warming up (score: 0.4678)
+📊 Acceptance: 3/3 (100.00%)
+🎯 Threshold: 1.7642
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9184
+Total Examples: 6000
+Participating Clients: 3
+Individual Client Recalls: [0.9124748490945674, 0.8840725806451613, 0.9587939698492463]
+===================================
+
+🛑 Server shutdown requested by user

@@ -127,6 +127,8 @@ if __name__ == '__main__':
         import traceback
         traceback.print_exc()
     finally:
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
         if 'log_file' in locals():
             log_file.close()
         print("📝 Logs saved to logs/ directory")

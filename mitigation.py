@@ -26,10 +26,15 @@ class GradientSignatureVerifier:
         self.attack_detection_count = 0
         self.total_clients_processed = 0
         self.total_updates_filtered = 0
+        
+        # ✅ NEW: Track blocked clients and their detection history
+        self.blocked_clients = set()
+        self.detection_history = {}  # client_id -> list of detection rounds
+        self.client_round_mapping = {}  # Maps client proxy to consistent client_id
 
         self.score_log_path = "logs/client_scores.csv"
         with open(self.score_log_path, "w") as f:
-            f.write("round,client,score\n")
+            f.write("round,client_id,score,filtered,blocked\n")
 
         print("\U0001F50D GSV initialized | window:", signature_window, "| threshold:", anomaly_threshold)
 
@@ -136,6 +141,22 @@ class GradientSignatureVerifier:
             print(f"\u26A0\uFE0F  Distance calculation error: {e}")
             return 0.0
 
+    def _get_client_id(self, client_proxy):
+        """Get consistent client ID from proxy"""
+        client_key = str(client_proxy)
+        if client_key not in self.client_round_mapping:
+            # Extract client ID from proxy string or assign new one
+            try:
+                # Try to extract from proxy string representation
+                if 'client_' in str(client_proxy):
+                    client_id = str(client_proxy).split('client_')[1].split('_')[0]
+                else:
+                    client_id = f"client_{len(self.client_round_mapping)}"
+            except:
+                client_id = f"client_{len(self.client_round_mapping)}"
+            self.client_round_mapping[client_key] = client_id
+        return self.client_round_mapping[client_key]
+
     def verify_gradients(self, client_updates):
         print(f"\n\U0001F50D Round {self.round_count}: GSV Verification")
         print("=" * 55)
@@ -151,36 +172,66 @@ class GradientSignatureVerifier:
         confidence_margin = 0.2
 
         for i, (client_proxy, fit_res) in enumerate(client_updates):
+            client_id = self._get_client_id(client_proxy)
+            
+            # ✅ Check if client is already blocked
+            if client_id in self.blocked_clients:
+                print(f"\U0001F6AB Client {client_id}: BLOCKED (previously detected)")
+                with open(self.score_log_path, "a") as f:
+                    f.write(f"{self.round_count},{client_id},0.0,1,1\n")
+                continue
+
             parameters = fl.common.parameters_to_ndarrays(fit_res.parameters)
             signature = self.compute_gradient_signature(parameters)
-            client_id = f"client_{i}"
             score = self.calculate_signature_distance(signature, client_id)
             client_scores.append(score)
 
-            with open(self.score_log_path, "a") as f:
-                f.write(f"{self.round_count},{client_id},{score:.4f}\n")
-
             profile = self.client_profiles.get(client_id, {'update_count': 0})
+            is_filtered = False
+            is_blocked = False
 
             if self.round_count < warmup_rounds or profile['update_count'] < min_updates_required:
-                print(f"\U0001F501 Client {i}: Warming up (score: {score:.4f})")
+                print(f"\U0001F501 Client {client_id}: Warming up (score: {score:.4f})")
                 self.update_client_profile(client_id, signature)
                 filtered_updates.append((client_proxy, fit_res))
             elif score > self.adaptive_threshold + confidence_margin:
-                print(f"\U0001F6A8 Client {i}: FILTERED (score: {score:.4f})")
+                print(f"\U0001F6A8 Client {client_id}: MALICIOUS DETECTED (score: {score:.4f})")
+                
+                # ✅ Track detection history
+                if client_id not in self.detection_history:
+                    self.detection_history[client_id] = []
+                self.detection_history[client_id].append(self.round_count)
+                
+                # ✅ Block client after 2 consecutive detections
+                if len(self.detection_history[client_id]) >= 2:
+                    self.blocked_clients.add(client_id)
+                    is_blocked = True
+                    print(f"\U0001F6AB Client {client_id}: PERMANENTLY BLOCKED")
+                
                 self.attack_detection_count += 1
                 self.total_updates_filtered += 1
-                self.false_positive_count += 1
+                is_filtered = True
+                
+                # Don't add to filtered_updates - this client is rejected
             else:
-                print(f"\u2705 Client {i}: Accepted (score: {score:.4f})")
+                print(f"\u2705 Client {client_id}: Accepted (score: {score:.4f})")
                 self.update_client_profile(client_id, signature)
                 filtered_updates.append((client_proxy, fit_res))
+                
+                # ✅ Reset detection history on good behavior
+                if client_id in self.detection_history:
+                    self.detection_history[client_id] = []
+
+            # ✅ Log detailed information
+            with open(self.score_log_path, "a") as f:
+                f.write(f"{self.round_count},{client_id},{score:.4f},{int(is_filtered)},{int(is_blocked)}\n")
 
         self._adjust_threshold(client_scores)
 
         print(f"\U0001F4CA Acceptance: {len(filtered_updates)}/{len(client_updates)} "
               f"({100.0 * len(filtered_updates)/len(client_updates):.2f}%)")
         print(f"\U0001F3AF Threshold: {self.adaptive_threshold:.4f}")
+        print(f"\U0001F6AB Blocked clients: {len(self.blocked_clients)}")
 
         self.round_count += 1
         self.total_clients_processed += len(client_updates)
@@ -211,7 +262,9 @@ class GradientSignatureVerifier:
             'total_filtered': self.total_updates_filtered,
             'attacks_detected': self.attack_detection_count,
             'false_positives': self.false_positive_count,
-            'filter_rate': self.total_updates_filtered / max(1, self.total_clients_processed)
+            'filter_rate': self.total_updates_filtered / max(1, self.total_clients_processed),
+            'blocked_clients': len(self.blocked_clients),
+            'blocked_client_ids': list(self.blocked_clients)
         }
 
 

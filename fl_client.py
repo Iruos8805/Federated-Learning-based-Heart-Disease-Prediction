@@ -8,7 +8,7 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from dataset import load_dataset
 from preprocessing import basic_cleaning
 from modifications import remove_outliers, feature_engineering, scale_features, select_features
-from client_augment import augment_client_data  # ✅ NEW IMPORT
+from client_augment import augment_client_data
 
 import os
 import sys
@@ -37,9 +37,20 @@ sys.stderr = Tee(sys.stderr, log_file)
 #---------------------------------------------------------------
 
 class HeartClient(fl.client.NumPyClient):
-    def __init__(self, X, y):
+    def __init__(self, X, y, client_id, is_malicious=False):
         self.X = X
         self.y = y
+        self.client_id = client_id
+        self.is_malicious = is_malicious
+        self.current_round = 0
+        self.warmup_rounds = 15  # ✅ Match server warmup rounds
+        self.original_y = y.copy()  # ✅ Keep original labels
+        self.attack_active = False
+        
+        # ✅ Track if client has been detected/blocked
+        self.detection_count = 0
+        self.is_blocked = False
+        
         self.model = make_pipeline(
             RBFSampler(gamma=0.028092305159489246, n_components=1288, random_state=42),
             SGDClassifier(loss='hinge', alpha=1.0 / 400.7935817191417, max_iter=1000, random_state=42)
@@ -83,10 +94,33 @@ class HeartClient(fl.client.NumPyClient):
 
     def fit(self, parameters, config):
         print("-" * 60)
-        print("Fitting model on client data...")
+        print(f"Round {self.current_round}: Fitting model on client {self.client_id}")
+        
+        # ✅ Check if client should be blocked (simulated)
+        if self.is_blocked:
+            print(f"❌ Client {self.client_id} is blocked - cannot participate")
+            return self.get_parameters(), len(self.X), {}
         
         # Set parameters from server
         self.set_parameters(parameters)
+        
+        # ✅ Implement delayed malicious behavior
+        if self.is_malicious:
+            if self.current_round < self.warmup_rounds:
+                # Behave normally during warmup
+                if self.attack_active:
+                    print(f"🔄 Client {self.client_id}: Reverting to normal behavior (warmup)")
+                    self.y = self.original_y.copy()
+                    self.attack_active = False
+            else:
+                # Start attacking after warmup
+                if not self.attack_active:
+                    print(f"⚠️  Client {self.client_id}: Starting malicious attack (label flipping)")
+                    # Flip ALL labels for maximum impact
+                    self.y = 1 - self.original_y
+                    self.attack_active = True
+                else:
+                    print(f"⚠️  Client {self.client_id}: Continuing malicious attack")
         
         # Transform data using RBF sampler
         X_transformed = self.model.named_steps['rbfsampler'].transform(self.X)
@@ -95,25 +129,31 @@ class HeartClient(fl.client.NumPyClient):
         local_epochs = 5
         for epoch in range(local_epochs):
             print(f"Epoch {epoch + 1}/{local_epochs}")
-            # Use partial_fit to maintain the existing model state
             self.model.named_steps['sgdclassifier'].partial_fit(X_transformed, self.y)
 
+        print(f"✅ Client {self.client_id}: Training completed for round {self.current_round}")
+        if self.is_malicious and self.attack_active:
+            print(f"🔥 Malicious labels distribution: {np.bincount(self.y)}")
+        
+        self.current_round += 1
         return self.get_parameters(), len(self.X), {}
 
     def evaluate(self, parameters, config):
         print("-" * 60)
-        print("Evaluating model on client data...")
+        print(f"Evaluating model on client {self.client_id} data...")
         
-        # Set parameters from server
+        # ✅ Always evaluate on original clean labels
         self.set_parameters(parameters)
-        
-        # Make predictions
         preds = self.model.predict(self.X)
-        score = recall_score(self.y, preds)
+        score = recall_score(self.original_y, preds)  # Use original labels
         
-        print("Recall Score:", score)
+        print(f"Client {self.client_id} Recall Score:", score)
         print("Predictions distribution:", np.bincount(preds))
-        print("True labels distribution:", np.bincount(self.y))
+        print("True labels distribution:", np.bincount(self.original_y))
+        
+        if self.is_malicious:
+            print(f"⚠️  Malicious client - Attack active: {self.attack_active}")
+        
         print("-" * 60)
         
         return 0.0, len(self.X), {"recall": score}
@@ -147,14 +187,13 @@ if __name__ == "__main__":
     print("Class distribution in this client:")
     print(np.bincount(y_part))
     print("Data shape before augmentation:", X_part.shape)
+    
+    # ✅ Remove immediate label flipping - will be handled in fit() method
+    # if is_malicious:
+    #     print("⚠️  Malicious behavior: Partially flipping labels")
+    #     ...
+
     print("-" * 60)
-
-    if is_malicious:
-        print("⚠️  Malicious behavior: Partially flipping labels")
-        flip_fraction = 1.0  # Flip 30% of labels
-        flip_indices = np.random.choice(len(y_part), size=int(len(y_part) * flip_fraction), replace=False)
-        y_part[flip_indices] = 1 - y_part[flip_indices]
-
 
     # ✅ Augment the client data before training
     X_aug, y_aug = augment_client_data(X_part, y_part, target_size=2000, method="combined")
@@ -164,12 +203,14 @@ if __name__ == "__main__":
     print("New class distribution:", np.bincount(y_aug))
     print("-" * 60)
 
-    client = HeartClient(X_aug, y_aug)
+    client = HeartClient(X_aug, y_aug, client_id, is_malicious)
 
-    print("Starting Federated Learning Client...")
+    print(f"Starting Federated Learning Client {client_id}...")
+    if is_malicious:
+        print("⚠️  Malicious behavior will activate after warmup rounds")
     print("-" * 60)
 
     fl.client.start_client(
         server_address="localhost:8080",
-        client=client.to_client()  # Convert NumPyClient to standard Client
+        client=client.to_client()
     )

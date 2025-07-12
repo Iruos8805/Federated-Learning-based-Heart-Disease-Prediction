@@ -40,6 +40,10 @@ def weighted_average(metrics):
     """
     Aggregate evaluation metrics from all clients.
     """
+    if not metrics:
+        print("⚠️  No metrics to aggregate")
+        return {"recall": 0.0}
+        
     recalls = [num_examples * m["recall"] for num_examples, m in metrics]
     examples = [num_examples for num_examples, _ in metrics]
     aggregated_recall = sum(recalls) / sum(examples)
@@ -47,6 +51,7 @@ def weighted_average(metrics):
     print(f"=== GLOBAL MODEL PERFORMANCE ===")
     print(f"Aggregated Recall Score: {aggregated_recall:.4f}")
     print(f"Total Examples: {sum(examples)}")
+    print(f"Participating Clients: {len(metrics)}")
     print(f"Individual Client Recalls: {[m['recall'] for _, m in metrics]}")
     print("=" * 35)
 
@@ -94,6 +99,8 @@ def start_server():
     print("   - Client-specific profile evolution")
     print("   - Adaptive threshold adjustment")
     print("   - Multi-metric anomaly detection")
+    print("   - Individual client filtering (not all clients)")
+    print("   - Persistent client blocking after detection")
     print("-" * 60)
 
     try:
@@ -112,6 +119,16 @@ def start_server():
         gsv_status = strategy.get_verification_status()
         for key, value in gsv_status.items():
             print(f"   {key}: {value}")
+        
+        # ✅ Additional detailed reporting
+        print("\n📊 Detailed Defense Report:")
+        print(f"   • Total rounds completed: {gsv_status['round']}")
+        print(f"   • Malicious clients blocked: {gsv_status['blocked_clients']}")
+        print(f"   • Attack detection rate: {gsv_status['attacks_detected']}/{gsv_status['total_processed']}")
+        print(f"   • System filter rate: {gsv_status['filter_rate']:.2%}")
+        if gsv_status['blocked_client_ids']:
+            print(f"   • Blocked client IDs: {gsv_status['blocked_client_ids']}")
+            
     except Exception as e:
         print(f"❌ Error getting GSV status: {e}")
     print("=" * 60)
