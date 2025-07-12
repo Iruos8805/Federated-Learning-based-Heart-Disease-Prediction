@@ -1,6 +1,7 @@
 """
 Client-Side Data Augmentation for Federated Learning
 Integrates SMOTE, Noise, Interpolation, MixUp, and Dropout
+Supports 'light', 'strong', and individual modes
 """
 
 import numpy as np
@@ -98,11 +99,11 @@ class ClientDataAugmenter:
 
 def augment_client_data(X, y, target_size=2000, method="combined"):
     """
-    Supreme client-side augmentation function
+    Client-side augmentation function
     Args:
         X, y: input data (numpy arrays)
         target_size: desired number of samples after augmentation
-        method: 'smote', 'noise', 'interpolation', 'combined'
+        method: 'light', 'strong', 'smote', 'noise', 'interpolation', 'combined'
     Returns:
         X_aug, y_aug: augmented data
     """
@@ -119,7 +120,25 @@ def augment_client_data(X, y, target_size=2000, method="combined"):
     elif method == "interpolation":
         return augmenter.augment_with_interpolation(X_aug, y_aug, target_size - len(X))
 
-    elif method == "combined":
+    elif method == "light":
+        # Light augment: minimal noise + interpolation
+        stage1_target = int(target_size * 0.6)
+        X_aug, y_aug = augmenter.augment_with_smote(X_aug, y_aug, stage1_target)
+
+        rem = target_size - len(X_aug)
+        if rem > 0:
+            X_aug, y_aug = augmenter.augment_with_interpolation(X_aug, y_aug, rem)
+
+        X_aug = augmenter.apply_feature_dropout(X_aug, rate=0.02)
+
+        if len(X_aug) > target_size:
+            idx = np.random.choice(len(X_aug), target_size, replace=False)
+            X_aug, y_aug = X_aug[idx], y_aug[idx]
+
+        return X_aug, y_aug
+
+    elif method in ["strong", "combined"]:
+        # Full combo (strong)
         stage1_target = int(target_size * 0.6)
         X_aug, y_aug = augmenter.augment_with_smote(X_aug, y_aug, stage1_target)
 

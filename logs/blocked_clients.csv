@@ -1,0 +1,4 @@
+round,client,reason,consecutive_failures
+17,client_2,permanent_block,3
+18,client_0,permanent_block,3
+18,client_1,permanent_block,3
