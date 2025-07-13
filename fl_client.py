@@ -12,12 +12,18 @@ from client_augment import augment_client_data
 
 import os
 import sys
+import atexit
 from datetime import datetime
 
 #---------------------------------------------------------------
 os.makedirs("logs", exist_ok=True)
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_file = open(f"logs/fl_client_{timestamp}.txt", "w")
+client_id_from_args = int(sys.argv[1]) if len(sys.argv) > 1 else np.random.randint(0, 1000)
+log_file = open(f"logs/fl_client_{client_id_from_args}_{timestamp}.txt", "w")
+
+# Store original streams
+original_stdout = sys.stdout
+original_stderr = sys.stderr
 
 class Tee:
     def __init__(self, *streams):
@@ -25,12 +31,35 @@ class Tee:
 
     def write(self, data):
         for s in self.streams:
-            s.write(data)
-            s.flush()
+            try:
+                if hasattr(s, 'write') and not s.closed:
+                    s.write(data)
+                    s.flush()
+            except (ValueError, AttributeError):
+                # Handle closed file errors silently
+                pass
 
     def flush(self):
         for s in self.streams:
-            s.flush()
+            try:
+                if hasattr(s, 'flush') and not s.closed:
+                    s.flush()
+            except (ValueError, AttributeError):
+                # Handle closed file errors silently
+                pass
+
+def cleanup_logging():
+    """Cleanup function to restore original streams and close log file"""
+    try:
+        sys.stdout = original_stdout
+        sys.stderr = original_stderr
+        if log_file and not log_file.closed:
+            log_file.close()
+    except:
+        pass
+
+# Register cleanup function
+atexit.register(cleanup_logging)
 
 sys.stdout = Tee(sys.stdout, log_file)
 sys.stderr = Tee(sys.stderr, log_file)
@@ -99,7 +128,7 @@ class HeartClient(fl.client.NumPyClient):
         # ✅ Check if client should be blocked (simulated)
         if self.is_blocked:
             print(f"❌ Client {self.client_id} is blocked - cannot participate")
-            return self.get_parameters(), len(self.X), {}
+            return self.get_parameters(), len(self.X), {"client_id": str(self.client_id)}
         
         # Set parameters from server
         self.set_parameters(parameters)
@@ -136,7 +165,7 @@ class HeartClient(fl.client.NumPyClient):
             print(f"🔥 Malicious labels distribution: {np.bincount(self.y)}")
         
         self.current_round += 1
-        return self.get_parameters(), len(self.X), {}
+        return self.get_parameters(), len(self.X), {"client_id": str(self.client_id)}
 
     def evaluate(self, parameters, config):
         print("-" * 60)
@@ -156,14 +185,14 @@ class HeartClient(fl.client.NumPyClient):
         
         print("-" * 60)
         
-        return 0.0, len(self.X), {"recall": score}
+        return 0.0, len(self.X), {"recall": score, "client_id": str(self.client_id)}
 
 if __name__ == "__main__":
     print("-" * 60)
     print("Loading and preprocessing client data...")
 
     # Get client ID and malicious flag from command line
-    client_id = int(sys.argv[1]) if len(sys.argv) > 1 else np.random.randint(0, 1000)
+    client_id = client_id_from_args
     is_malicious = len(sys.argv) > 2 and sys.argv[2].lower() in ["mal", "malicious", "--mal"]   
 
     df = load_dataset()
@@ -210,7 +239,17 @@ if __name__ == "__main__":
         print("⚠️  Malicious behavior will activate after warmup rounds")
     print("-" * 60)
 
-    fl.client.start_client(
-        server_address="localhost:8080",
-        client=client.to_client()
-    )
+    try:
+        fl.client.start_client(
+            server_address="localhost:8080",
+            client=client.to_client()
+        )
+    except KeyboardInterrupt:
+        print(f"\n🛑 Client {client_id} shutdown requested by user")
+    except Exception as e:
+        print(f"\n❌ Client {client_id} error: {e}")
+        import traceback
+        traceback.print_exc()
+    finally:
+        print(f"📝 Client {client_id} logs saved to logs/ directory")
+        cleanup_logging()

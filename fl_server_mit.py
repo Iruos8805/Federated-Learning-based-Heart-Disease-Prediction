@@ -7,14 +7,19 @@ Description: Main server implementation with GSV defense against adversarial att
 import flwr as fl
 import os
 import sys
+import atexit
 from datetime import datetime
 from mitigation import GSVStrategy, load_validation_data
 
 #---------------------------------------------------------------
-# Logging setup
+# Logging setup with proper cleanup
 os.makedirs("logs", exist_ok=True)
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_file = open(f"logs/fl_server_gsv_{timestamp}.txt", "w")
+
+# Store original streams
+original_stdout = sys.stdout
+original_stderr = sys.stderr
 
 class Tee:
     """Helper class to redirect output to both console and log file"""
@@ -23,12 +28,35 @@ class Tee:
 
     def write(self, data):
         for s in self.streams:
-            s.write(data)
-            s.flush()
+            try:
+                if hasattr(s, 'write') and not s.closed:
+                    s.write(data)
+                    s.flush()
+            except (ValueError, AttributeError):
+                # Handle closed file errors silently
+                pass
 
     def flush(self):
         for s in self.streams:
-            s.flush()
+            try:
+                if hasattr(s, 'flush') and not s.closed:
+                    s.flush()
+            except (ValueError, AttributeError):
+                # Handle closed file errors silently
+                pass
+
+def cleanup_logging():
+    """Cleanup function to restore original streams and close log file"""
+    try:
+        sys.stdout = original_stdout
+        sys.stderr = original_stderr
+        if log_file and not log_file.closed:
+            log_file.close()
+    except:
+        pass
+
+# Register cleanup function
+atexit.register(cleanup_logging)
 
 # Redirect stdout and stderr
 sys.stdout = Tee(sys.stdout, log_file)
@@ -112,6 +140,9 @@ def start_server():
     except Exception as e:
         print(f"❌ Error starting server: {e}")
         raise
+    finally:
+        # Ensure proper cleanup
+        cleanup_logging()
 
     print("\n" + "=" * 60)
     print("🔍 Final GSV System Status:")
@@ -144,6 +175,5 @@ if __name__ == '__main__':
         import traceback
         traceback.print_exc()
     finally:
-        if 'log_file' in locals():
-            log_file.close()
         print("📝 Logs saved to logs/ directory")
+        cleanup_logging()
