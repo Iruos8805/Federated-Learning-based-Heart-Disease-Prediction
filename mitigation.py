@@ -141,19 +141,16 @@ class GradientSignatureVerifier:
             print(f"\u26A0\uFE0F  Distance calculation error: {e}")
             return 0.0
 
-    def _get_client_id(self, client_proxy):
-        """Get consistent client ID from proxy"""
+    def _get_client_id(self, client_proxy, fit_res):
+        """Get client ID from fit results or fallback to proxy-based ID"""
+        # Try to get client ID from fit results first
+        if hasattr(fit_res, 'metrics') and fit_res.metrics and 'client_id' in fit_res.metrics:
+            return fit_res.metrics['client_id']
+        
+        # Fallback to proxy-based ID assignment
         client_key = str(client_proxy)
         if client_key not in self.client_round_mapping:
-            # Extract client ID from proxy string or assign new one
-            try:
-                # Try to extract from proxy string representation
-                if 'client_' in str(client_proxy):
-                    client_id = str(client_proxy).split('client_')[1].split('_')[0]
-                else:
-                    client_id = f"client_{len(self.client_round_mapping)}"
-            except:
-                client_id = f"client_{len(self.client_round_mapping)}"
+            client_id = f"client_{len(self.client_round_mapping)}"
             self.client_round_mapping[client_key] = client_id
         return self.client_round_mapping[client_key]
 
@@ -172,7 +169,7 @@ class GradientSignatureVerifier:
         confidence_margin = 0.2
 
         for i, (client_proxy, fit_res) in enumerate(client_updates):
-            client_id = self._get_client_id(client_proxy)
+            client_id = self._get_client_id(client_proxy, fit_res)
             
             # ✅ Check if client is already blocked
             if client_id in self.blocked_clients:

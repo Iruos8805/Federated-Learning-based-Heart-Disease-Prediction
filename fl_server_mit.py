@@ -8,14 +8,28 @@ import flwr as fl
 import os
 import sys
 import atexit
+import argparse
 from datetime import datetime
 from mitigation import GSVStrategy, load_validation_data
 
 #---------------------------------------------------------------
+# Parse command line arguments
+def parse_args():
+    parser = argparse.ArgumentParser(description='Federated Learning Server with GSV Defense')
+    parser.add_argument('--num_clients', '-n', type=int, default=3, 
+                       help='Number of clients to use (default: 3)')
+    parser.add_argument('--num_rounds', '-r', type=int, default=30,
+                       help='Number of training rounds (default: 30)')
+    return parser.parse_args()
+
+args = parse_args()
+num_clients = args.num_clients
+num_rounds = args.num_rounds
+
 # Logging setup with proper cleanup
 os.makedirs("logs", exist_ok=True)
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_file = open(f"logs/fl_server_gsv_{timestamp}.txt", "w")
+log_file = open(f"logs/fl_server_gsv_{num_clients}clients_{timestamp}.txt", "w")
 
 # Store original streams
 original_stdout = sys.stdout
@@ -92,6 +106,7 @@ def start_server():
     """
     print("-" * 60)
     print("🚀 Starting Federated Learning Server with GSV Defense")
+    print(f"📊 Configuration: {num_clients} clients, {num_rounds} rounds")
     print("-" * 60)
 
     # Load validation data (kept for compatibility, not used in GSV)
@@ -104,17 +119,19 @@ def start_server():
         print("⚠️  Proceeding without validation data (GSV doesn't require it)")
         validation_data = None
 
-    # Create GSV strategy
+    # Create GSV strategy with dynamic client configuration
     try:
         strategy = GSVStrategy(
-            min_fit_clients=3,
-            min_available_clients=3,
-            min_evaluate_clients=3,
+            min_fit_clients=num_clients,
+            min_available_clients=num_clients,
+            min_evaluate_clients=num_clients,
             fraction_fit=1.0,
             fraction_evaluate=1.0,
             evaluate_metrics_aggregation_fn=weighted_average,
         )
         print("✅ GSV strategy initialized successfully")
+        print(f"   • Minimum clients required: {num_clients}")
+        print(f"   • Training rounds: {num_rounds}")
     except Exception as e:
         print(f"❌ Error creating GSV strategy: {e}")
         raise
@@ -134,7 +151,7 @@ def start_server():
     try:
         fl.server.start_server(
             server_address="localhost:8080",
-            config=fl.server.ServerConfig(num_rounds=30),
+            config=fl.server.ServerConfig(num_rounds=num_rounds),
             strategy=strategy
         )
     except Exception as e:
@@ -166,6 +183,11 @@ def start_server():
 
 
 if __name__ == '__main__':
+    print(f"🔧 Server starting with {num_clients} clients for {num_rounds} rounds")
+    print("Usage: python fl_server_mit.py --num_clients 5 --num_rounds 25")
+    print("   or: python fl_server_mit.py -n 5 -r 25")
+    print("-" * 60)
+    
     try:
         start_server()
     except KeyboardInterrupt:
