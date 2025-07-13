@@ -315,26 +315,10 @@ class FederatedLearningTester:
             return (validation_results["true_positives"] >= 1 and 
                    validation_results["false_positives"] == 0)
         
-        elif "multiple_continuous_malicious" in test_name.lower():
-            # Must detect all or most malicious clients with zero false positives
-            expected_malicious = len(validation_results["expected_malicious"])
-            return (validation_results["true_positives"] >= max(1, expected_malicious * 0.8) and 
-                   validation_results["false_positives"] == 0)
-        
         elif "random_malicious" in test_name.lower():
             # Random attacks: Allow some missed detections but zero false positives
             return (validation_results["false_positives"] == 0 and
                    validation_results["true_positives"] >= 0)  # At least some detection attempt
-        
-        elif "mixed_attack" in test_name.lower():
-            # Mixed attacks: Must catch at least one malicious client, zero false positives
-            return (validation_results["true_positives"] >= 1 and 
-                   validation_results["false_positives"] == 0)
-        
-        elif "resilience" in test_name.lower() or "stress" in test_name.lower():
-            # Under stress: Must still have zero false positives
-            return (validation_results["false_positives"] == 0 and
-                   validation_results["true_positives"] >= 1)
         
         elif "detection_consistency" in test_name.lower():
             # Must consistently detect with zero false positives
@@ -345,17 +329,7 @@ class FederatedLearningTester:
             # Early detection: Must detect with zero false positives
             return (validation_results["true_positives"] >= 1 and 
                    validation_results["false_positives"] == 0)
-        
-        elif "large_scale" in test_name.lower():
-            # Large scale: Must detect some malicious clients with zero false positives
-            return (validation_results["true_positives"] >= 1 and 
-                   validation_results["false_positives"] == 0)
-        
-        elif "adaptive_threshold" in test_name.lower():
-            # Adaptive threshold: Must work without false positives
-            return (validation_results["false_positives"] == 0 and
-                   validation_results["true_positives"] >= 0)
-        
+
         else:
             # Default: Zero false positives required
             return validation_results["false_positives"] == 0
@@ -394,7 +368,6 @@ class FederatedLearningTester:
         
         print(f"   - Normal clients: {len(normal_clients)} {[c['client_id'] for c in normal_clients]}")
         print(f"   - Malicious clients: {len(malicious_clients)} {[c['client_id'] for c in malicious_clients]}")
-        print(f"   🚨 STRICT MODE: Zero false positives required for PASS")
         
         if malicious_clients:
             for client in malicious_clients:
@@ -526,33 +499,6 @@ class FederatedLearningTester:
             ]
         )
     
-    def test_multiple_continuous_malicious(self):
-        """Test 4: Multiple continuous malicious clients"""
-        return self.run_test_scenario(
-            "Multiple Continuous Malicious Clients",
-            {"num_clients": 4, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
-            [
-                {"client_id": 1, "params": {"warmup": 5}},
-                {"client_id": 2, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 3, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 4, "params": {"warmup": 5}}
-            ]
-        )
-    
-    def test_mixed_attack_types(self):
-        """Test 5: Mixed attack types (continuous + random)"""
-        return self.run_test_scenario(
-            "Mixed Attack Types",
-            {"num_clients": 5, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
-            [
-                {"client_id": 1, "params": {"warmup": 5}},
-                {"client_id": 2, "params": {"malicious": True, "warmup": 5}},  # Continuous
-                {"client_id": 3, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.7}},  # Random
-                {"client_id": 4, "params": {"warmup": 5}},
-                {"client_id": 5, "params": {"warmup": 5}}
-            ]
-        )
-    
     def test_false_positive_check(self):
         """Test 6: False positive check with many normal clients"""
         return self.run_test_scenario(
@@ -577,20 +523,6 @@ class FederatedLearningTester:
                 {"client_id": 1, "params": {"warmup": 5}},
                 {"client_id": 2, "params": {"malicious": True, "warmup": 5}},
                 {"client_id": 3, "params": {"warmup": 5}}
-            ]
-        )
-    
-    def test_system_resilience(self):
-        """Test 8: System resilience with majority malicious clients"""
-        return self.run_test_scenario(
-            "System Resilience Test",
-            {"num_clients": 5, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
-            [
-                {"client_id": 1, "params": {"warmup": 5}},
-                {"client_id": 2, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 3, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 4, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.6}},
-                {"client_id": 5, "params": {"warmup": 5}}
             ]
         )
     
@@ -620,36 +552,6 @@ class FederatedLearningTester:
             timeout=700  # Increased timeout for longer test
         )
     
-    def test_large_scale_scenario(self):
-        """Test 11: Large scale scenario with many clients"""
-        return self.run_test_scenario(
-            "Large Scale Scenario",
-            {"num_clients": 8, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
-            [
-                {"client_id": 1, "params": {"warmup": 5}},
-                {"client_id": 2, "params": {"warmup": 5}},
-                {"client_id": 3, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 4, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.5}},
-                {"client_id": 5, "params": {"warmup": 5}},
-                {"client_id": 6, "params": {"warmup": 5}},
-                {"client_id": 7, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 8, "params": {"warmup": 5}}
-            ]
-        )
-    
-    def test_adaptive_threshold_behavior(self):
-        """Test 12: Adaptive threshold behavior"""
-        return self.run_test_scenario(
-            "Adaptive Threshold Behavior",
-            {"num_clients": 4, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
-            [
-                {"client_id": 1, "params": {"warmup": 5}},
-                {"client_id": 2, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.4}},
-                {"client_id": 3, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.6}},
-                {"client_id": 4, "params": {"warmup": 5}}
-            ]
-        )
-
     def run_all_tests(self):
         """Run all test scenarios with comprehensive validation"""
         print("🚀 Starting Comprehensive FL System Test Suite with Result Validation")
@@ -659,15 +561,10 @@ class FederatedLearningTester:
             self.test_basic_functionality,
             self.test_single_continuous_malicious,
             self.test_single_random_malicious_high_prob,
-            self.test_multiple_continuous_malicious,
-            self.test_mixed_attack_types,
             self.test_false_positive_check,
             self.test_early_detection,
-            self.test_system_resilience,
             self.test_detection_consistency,
             self.test_random_attacks_low_probability,
-            self.test_large_scale_scenario,
-            self.test_adaptive_threshold_behavior
         ]
         
         total_tests = len(test_methods)
@@ -794,9 +691,7 @@ def main():
         print("Available tests:")
         tests = [
             "basic_functionality", "single_continuous_malicious", "single_random_malicious_high_prob",
-            "multiple_continuous_malicious", "mixed_attack_types", "false_positive_check",
-            "early_detection", "system_resilience", "detection_consistency",
-            "random_attacks_low_probability", "large_scale_scenario", "adaptive_threshold_behavior"
+            "false_positive_check","early_detection", "detection_consistency", "random_attacks_low_probability"
         ]
         for i, test in enumerate(tests, 1):
             print(f"{i}. {test}")

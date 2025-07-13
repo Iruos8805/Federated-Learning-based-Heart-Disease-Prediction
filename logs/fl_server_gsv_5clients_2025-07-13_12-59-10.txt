@@ -1,0 +1,676 @@
+🔧 Server starting with 5 clients for 30 rounds (15 warmup)
+Usage: python fl_server_mit.py --num_clients 5 --num_rounds 25 --warmup 10
+   or: python fl_server_mit.py -n 5 -r 25 --warmup 10
+------------------------------------------------------------
+------------------------------------------------------------
+🚀 Starting Federated Learning Server with GSV Defense
+📊 Configuration: 5 clients, 30 rounds, 15 warmup
+------------------------------------------------------------
+🔧 Initializing Gradient Signature Verifier...
+📊 Loading validation data...
+Loaded dataset from: ./heart.csv
+------------------------------------------------------------
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 918 entries, 0 to 917
+Data columns (total 12 columns):
+ #   Column          Non-Null Count  Dtype  
+---  ------          --------------  -----  
+ 0   Age             918 non-null    int64  
+ 1   Sex             918 non-null    object 
+ 2   ChestPainType   918 non-null    object 
+ 3   RestingBP       918 non-null    int64  
+ 4   Cholesterol     918 non-null    int64  
+ 5   FastingBS       918 non-null    int64  
+ 6   RestingECG      918 non-null    object 
+ 7   MaxHR           918 non-null    int64  
+ 8   ExerciseAngina  918 non-null    object 
+ 9   Oldpeak         918 non-null    float64
+ 10  ST_Slope        918 non-null    object 
+ 11  HeartDisease    918 non-null    int64  
+dtypes: float64(1), int64(6), object(5)
+memory usage: 86.2+ KB
+None
+Missing values:
+ Age               0
+Sex               0
+ChestPainType     0
+RestingBP         0
+Cholesterol       0
+FastingBS         0
+RestingECG        0
+MaxHR             0
+ExerciseAngina    0
+Oldpeak           0
+ST_Slope          0
+HeartDisease      0
+dtype: int64
+Has Duplicates: False
+------------------------------------------------------------
+Saved boxplot to ./EDA/boxplot.png
+------------------------------------------------------------
+Removed 216 outlier rows
+------------------------------------------------------------
+Performed feature engineering
+------------------------------------------------------------
+Scaled numerical features
+------------------------------------------------------------
+Selected 23 features: ['Age', 'RestingBP', 'Cholesterol', 'FastingBS', 'MaxHR', 'Oldpeak', 'Sex_F', 'Sex_M', 'ChestPainType_ASY', 'ChestPainType_ATA', 'ChestPainType_NAP', 'ChestPainType_TA', 'RestingECG_LVH', 'RestingECG_Normal', 'RestingECG_ST', 'ExerciseAngina_N', 'ExerciseAngina_Y', 'ST_Slope_Down', 'ST_Slope_Flat', 'ST_Slope_Up', 'AgeGroup_Middle-aged', 'AgeGroup_Senior', 'AgeGroup_Very old']
+------------------------------------------------------------
+✅ Validation set: 211 samples
+✅ Validation data loaded successfully
+🔍 GSV initialized | window: 10 | threshold: 2.5
+✅ GSV strategy initialized successfully
+   • Minimum clients required: 5
+   • Training rounds: 30
+   • Warmup rounds: 15
+🔍 Gradient Signature Verification (GSV) activated
+🛡️  Defense system ready for adversarial attack detection
+🧬 GSV Features:
+   - Gradient magnitude distribution analysis
+   - Sign pattern behavioral fingerprinting
+   - Client-specific profile evolution
+   - Adaptive threshold adjustment
+   - Multi-metric anomaly detection
+   - Individual client filtering (not all clients)
+   - Persistent client blocking after detection
+------------------------------------------------------------
+
+🔍 Round 1: GSV Aggregation
+============================================================
+
+🔍 Round 0: GSV Verification
+=======================================================
+🔁 Client 2025: Warming up (score: 0.0000) [Round 0/15]
+🔁 Client 2026: Warming up (score: 0.0000) [Round 0/15]
+🔁 Client 2027: Warming up (score: 0.0000) [Round 0/15]
+🔁 Client 2023: Warming up (score: 0.0000) [Round 0/15]
+🔁 Client 2024: Warming up (score: 0.0000) [Round 0/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 2.5000
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9104
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9587939698492463, 0.8937875751503006, 0.9258517034068137, 0.8729838709677419, 0.9004024144869215]
+===================================
+
+🔍 Round 2: GSV Aggregation
+============================================================
+
+🔍 Round 1: GSV Verification
+=======================================================
+🔁 Client 2025: Warming up (score: 0.0000) [Round 1/15]
+🔁 Client 2026: Warming up (score: 0.0000) [Round 1/15]
+🔁 Client 2023: Warming up (score: 0.0000) [Round 1/15]
+🔁 Client 2027: Warming up (score: 0.0000) [Round 1/15]
+🔁 Client 2024: Warming up (score: 0.0000) [Round 1/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 2.5000
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9142
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.964824120603015, 0.8957915831663327, 0.9278557114228457, 0.8770161290322581, 0.9054325955734407]
+===================================
+
+🔍 Round 3: GSV Aggregation
+============================================================
+
+🔍 Round 2: GSV Verification
+=======================================================
+🔁 Client 2027: Warming up (score: 1.9610) [Round 2/15]
+🔁 Client 2024: Warming up (score: 3.5005) [Round 2/15]
+🔁 Client 2023: Warming up (score: 3.5005) [Round 2/15]
+🔁 Client 2025: Warming up (score: 3.4241) [Round 2/15]
+🔁 Client 2026: Warming up (score: 3.5011) [Round 2/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 2.5000
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9160
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9668341708542714, 0.8780241935483871, 0.9064386317907445, 0.8987975951903807, 0.9298597194388778]
+===================================
+
+🔍 Round 4: GSV Aggregation
+============================================================
+
+🔍 Round 3: GSV Verification
+=======================================================
+🔁 Client 2026: Warming up (score: 2.3478) [Round 3/15]
+🔁 Client 2025: Warming up (score: 3.2187) [Round 3/15]
+🔁 Client 2024: Warming up (score: 0.7575) [Round 3/15]
+🔁 Client 2023: Warming up (score: 1.0229) [Round 3/15]
+🔁 Client 2027: Warming up (score: 2.6922) [Round 3/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2009
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9164
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9678391959798995, 0.8987975951903807, 0.9298597194388778, 0.8790322580645161, 0.9064386317907445]
+===================================
+
+🔍 Round 5: GSV Aggregation
+============================================================
+
+🔍 Round 4: GSV Verification
+=======================================================
+🔁 Client 2025: Warming up (score: 0.7922) [Round 4/15]
+🔁 Client 2024: Warming up (score: 1.0009) [Round 4/15]
+🔁 Client 2027: Warming up (score: 0.9455) [Round 4/15]
+🔁 Client 2026: Warming up (score: 0.8335) [Round 4/15]
+🔁 Client 2023: Warming up (score: 1.1781) [Round 4/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2007
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9170
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9074446680080482, 0.9308617234468938, 0.8997995991983968, 0.9678391959798995, 0.8790322580645161]
+===================================
+
+🔍 Round 6: GSV Aggregation
+============================================================
+
+🔍 Round 5: GSV Verification
+=======================================================
+🔁 Client 2027: Warming up (score: 0.8212) [Round 5/15]
+🔁 Client 2023: Warming up (score: 0.6668) [Round 5/15]
+🔁 Client 2024: Warming up (score: 0.8649) [Round 5/15]
+🔁 Client 2025: Warming up (score: 0.7106) [Round 5/15]
+🔁 Client 2026: Warming up (score: 0.5058) [Round 5/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2006
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9164
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9074446680080482, 0.8987975951903807, 0.9658291457286432, 0.8790322580645161, 0.9308617234468938]
+===================================
+
+🔍 Round 7: GSV Aggregation
+============================================================
+
+🔍 Round 6: GSV Verification
+=======================================================
+🔁 Client 2027: Warming up (score: 0.7972) [Round 6/15]
+🔁 Client 2024: Warming up (score: 0.4047) [Round 6/15]
+🔁 Client 2026: Warming up (score: 0.8339) [Round 6/15]
+🔁 Client 2025: Warming up (score: 0.6015) [Round 6/15]
+🔁 Client 2023: Warming up (score: 0.5701) [Round 6/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2006
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9154
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9288577154308617, 0.9064386317907445, 0.8790322580645161, 0.9658291457286432, 0.8967935871743486]
+===================================
+
+🔍 Round 8: GSV Aggregation
+============================================================
+
+🔍 Round 7: GSV Verification
+=======================================================
+🔁 Client 2025: Warming up (score: 0.6998) [Round 7/15]
+🔁 Client 2024: Warming up (score: 0.4211) [Round 7/15]
+🔁 Client 2023: Warming up (score: 0.5150) [Round 7/15]
+🔁 Client 2027: Warming up (score: 0.5105) [Round 7/15]
+🔁 Client 2026: Warming up (score: 0.8900) [Round 7/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2006
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9164
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9298597194388778, 0.8977955911823647, 0.9668341708542714, 0.9074446680080482, 0.8800403225806451]
+===================================
+
+🔍 Round 9: GSV Aggregation
+============================================================
+
+🔍 Round 8: GSV Verification
+=======================================================
+🔁 Client 2024: Warming up (score: 0.4334) [Round 8/15]
+🔁 Client 2025: Warming up (score: 0.4593) [Round 8/15]
+🔁 Client 2026: Warming up (score: 0.4440) [Round 8/15]
+🔁 Client 2027: Warming up (score: 0.4328) [Round 8/15]
+🔁 Client 2023: Warming up (score: 0.6221) [Round 8/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2006
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9158
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9658291457286432, 0.8977955911823647, 0.9288577154308617, 0.8800403225806451, 0.9064386317907445]
+===================================
+
+🔍 Round 10: GSV Aggregation
+============================================================
+
+🔍 Round 9: GSV Verification
+=======================================================
+🔁 Client 2026: Warming up (score: 0.5596) [Round 9/15]
+🔁 Client 2025: Warming up (score: 0.5585) [Round 9/15]
+🔁 Client 2024: Warming up (score: 0.4851) [Round 9/15]
+🔁 Client 2027: Warming up (score: 0.5089) [Round 9/15]
+🔁 Client 2023: Warming up (score: 0.5649) [Round 9/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.1823
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9154
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.8800403225806451, 0.9054325955734407, 0.9658291457286432, 0.8967935871743486, 0.9288577154308617]
+===================================
+
+🔍 Round 11: GSV Aggregation
+============================================================
+
+🔍 Round 10: GSV Verification
+=======================================================
+🔁 Client 2027: Warming up (score: 0.7123) [Round 10/15]
+🔁 Client 2023: Warming up (score: 0.4524) [Round 10/15]
+🔁 Client 2024: Warming up (score: 0.5015) [Round 10/15]
+🔁 Client 2025: Warming up (score: 0.4613) [Round 10/15]
+🔁 Client 2026: Warming up (score: 0.4494) [Round 10/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.1593
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9152
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9054325955734407, 0.9278557114228457, 0.9658291457286432, 0.8800403225806451, 0.8967935871743486]
+===================================
+
+🔍 Round 12: GSV Aggregation
+============================================================
+
+🔍 Round 11: GSV Verification
+=======================================================
+🔁 Client 2027: Warming up (score: 0.6220) [Round 11/15]
+🔁 Client 2024: Warming up (score: 0.3808) [Round 11/15]
+🔁 Client 2026: Warming up (score: 0.5009) [Round 11/15]
+🔁 Client 2023: Warming up (score: 0.3722) [Round 11/15]
+🔁 Client 2025: Warming up (score: 0.4353) [Round 11/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.1364
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9152
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9054325955734407, 0.8967935871743486, 0.9278557114228457, 0.8800403225806451, 0.9658291457286432]
+===================================
+
+🔍 Round 13: GSV Aggregation
+============================================================
+
+🔍 Round 12: GSV Verification
+=======================================================
+🔁 Client 2024: Warming up (score: 0.5218) [Round 12/15]
+🔁 Client 2023: Warming up (score: 0.4640) [Round 12/15]
+🔁 Client 2025: Warming up (score: 0.3986) [Round 12/15]
+🔁 Client 2026: Warming up (score: 0.4472) [Round 12/15]
+🔁 Client 2027: Warming up (score: 0.6769) [Round 12/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.1134
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9150
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.8800403225806451, 0.8967935871743486, 0.9278557114228457, 0.9044265593561368, 0.9658291457286432]
+===================================
+
+🔍 Round 14: GSV Aggregation
+============================================================
+
+🔍 Round 13: GSV Verification
+=======================================================
+🔁 Client 2026: Warming up (score: 0.2894) [Round 13/15]
+🔁 Client 2025: Warming up (score: 0.4250) [Round 13/15]
+🔁 Client 2023: Warming up (score: 0.4482) [Round 13/15]
+🔁 Client 2027: Warming up (score: 0.5396) [Round 13/15]
+🔁 Client 2024: Warming up (score: 0.4915) [Round 13/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.0596
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9150
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.8800403225806451, 0.8967935871743486, 0.9044265593561368, 0.9278557114228457, 0.9658291457286432]
+===================================
+
+🔍 Round 15: GSV Aggregation
+============================================================
+
+🔍 Round 14: GSV Verification
+=======================================================
+🔁 Client 2026: Warming up (score: 0.3085) [Round 14/15]
+🔁 Client 2024: Warming up (score: 0.4367) [Round 14/15]
+🔁 Client 2025: Warming up (score: 0.4142) [Round 14/15]
+🔁 Client 2027: Warming up (score: 0.4740) [Round 14/15]
+🔁 Client 2023: Warming up (score: 0.4492) [Round 14/15]
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 3.9980
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9150
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9658291457286432, 0.8800403225806451, 0.9044265593561368, 0.8967935871743486, 0.9278557114228457]
+===================================
+
+🔍 Round 16: GSV Aggregation
+============================================================
+
+🔍 Round 15: GSV Verification
+=======================================================
+✅ Client 2023: Accepted (score: 0.3696, threshold: 4.4364)
+✅ Client 2027: Accepted (score: 0.3768, threshold: 4.4364)
+✅ Client 2025: Accepted (score: 3.5357, threshold: 4.4364)
+✅ Client 2026: Accepted (score: 3.5201, threshold: 4.4364)
+✅ Client 2024: Accepted (score: 0.5115, threshold: 4.4364)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 3.9364
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9584
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9619238476953907, 0.9223790322580645, 0.985929648241206, 0.96579476861167, 0.9559118236472945]
+===================================
+
+🔍 Round 17: GSV Aggregation
+============================================================
+
+🔍 Round 16: GSV Verification
+=======================================================
+✅ Client 2024: Accepted (score: 3.5010, threshold: 4.7006)
+✅ Client 2023: Accepted (score: 3.5011, threshold: 4.7006)
+✅ Client 2025: Accepted (score: 3.6530, threshold: 4.7006)
+✅ Client 2026: Accepted (score: 3.6000, threshold: 4.7006)
+✅ Client 2027: Accepted (score: 3.5011, threshold: 4.7006)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2006
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9399
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.90625, 0.9798994974874372, 0.937625754527163, 0.9318637274549099, 0.9438877755511023]
+===================================
+
+🔍 Round 18: GSV Aggregation
+============================================================
+
+🔍 Round 17: GSV Verification
+=======================================================
+✅ Client 2025: Accepted (score: 2.8067, threshold: 4.7014)
+✅ Client 2027: Accepted (score: 1.5580, threshold: 4.7014)
+✅ Client 2023: Accepted (score: 1.9740, threshold: 4.7014)
+✅ Client 2024: Accepted (score: 3.5159, threshold: 4.7014)
+✅ Client 2026: Accepted (score: 0.8180, threshold: 4.7014)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2014
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9419
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9829145728643216, 0.9328657314629258, 0.9416498993963782, 0.9082661290322581, 0.9438877755511023]
+===================================
+
+🔍 Round 19: GSV Aggregation
+============================================================
+
+🔍 Round 18: GSV Verification
+=======================================================
+✅ Client 2024: Accepted (score: 1.3587, threshold: 4.7111)
+✅ Client 2027: Accepted (score: 0.9051, threshold: 4.7111)
+✅ Client 2023: Accepted (score: 1.1924, threshold: 4.7111)
+✅ Client 2025: Accepted (score: 2.6391, threshold: 4.7111)
+✅ Client 2026: Accepted (score: 0.5669, threshold: 4.7111)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2111
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9421
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9338677354709419, 0.9458917835671342, 0.9839195979899498, 0.9386317907444668, 0.9082661290322581]
+===================================
+
+🔍 Round 20: GSV Aggregation
+============================================================
+
+🔍 Round 19: GSV Verification
+=======================================================
+✅ Client 2025: Accepted (score: 2.0405, threshold: 4.7067)
+✅ Client 2024: Accepted (score: 1.0516, threshold: 4.7067)
+✅ Client 2023: Accepted (score: 0.7596, threshold: 4.7067)
+✅ Client 2027: Accepted (score: 0.7974, threshold: 4.7067)
+✅ Client 2026: Accepted (score: 2.7905, threshold: 4.7067)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2067
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9594
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9849246231155779, 0.9789579158316634, 0.9153225806451613, 0.9607645875251509, 0.9569138276553106]
+===================================
+
+🔍 Round 21: GSV Aggregation
+============================================================
+
+🔍 Round 20: GSV Verification
+=======================================================
+✅ Client 2024: Accepted (score: 1.0676, threshold: 4.7023)
+✅ Client 2027: Accepted (score: 2.1449, threshold: 4.7023)
+✅ Client 2026: Accepted (score: 3.1556, threshold: 4.7023)
+✅ Client 2023: Accepted (score: 1.5289, threshold: 4.7023)
+✅ Client 2025: Accepted (score: 0.7875, threshold: 4.7023)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2023
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9216
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9158316633266533, 0.8881048387096774, 0.920523138832998, 0.9539078156312625, 0.9296482412060302]
+===================================
+
+🔍 Round 22: GSV Aggregation
+============================================================
+
+🔍 Round 21: GSV Verification
+=======================================================
+✅ Client 2027: Accepted (score: 1.3327, threshold: 4.7023)
+✅ Client 2025: Accepted (score: 1.2116, threshold: 4.7023)
+✅ Client 2023: Accepted (score: 2.0211, threshold: 4.7023)
+✅ Client 2026: Accepted (score: 1.0213, threshold: 4.7023)
+✅ Client 2024: Accepted (score: 2.7222, threshold: 4.7023)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2023
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.8875
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9268537074148296, 0.8669354838709677, 0.8597194388777555, 0.8844221105527639, 0.8993963782696177]
+===================================
+
+🔍 Round 23: GSV Aggregation
+============================================================
+
+🔍 Round 22: GSV Verification
+=======================================================
+✅ Client 2026: Accepted (score: 3.0067, threshold: 4.7023)
+✅ Client 2023: Accepted (score: 2.4244, threshold: 4.7023)
+✅ Client 2025: Accepted (score: 1.3937, threshold: 4.7023)
+✅ Client 2024: Accepted (score: 1.2208, threshold: 4.7023)
+✅ Client 2027: Accepted (score: 0.8509, threshold: 4.7023)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2023
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9176
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9188376753507014, 0.8891129032258065, 0.908817635270541, 0.9487437185929648, 0.9225352112676056]
+===================================
+
+🔍 Round 24: GSV Aggregation
+============================================================
+
+🔍 Round 23: GSV Verification
+=======================================================
+✅ Client 2025: Accepted (score: 2.2479, threshold: 4.7022)
+✅ Client 2026: Accepted (score: 0.5900, threshold: 4.7022)
+✅ Client 2024: Accepted (score: 1.7603, threshold: 4.7022)
+✅ Client 2027: Accepted (score: 1.5738, threshold: 4.7022)
+✅ Client 2023: Accepted (score: 2.3757, threshold: 4.7022)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2022
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9274
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9248496993987976, 0.8951612903225806, 0.9285714285714286, 0.9278557114228457, 0.9608040201005025]
+===================================
+
+🔍 Round 25: GSV Aggregation
+============================================================
+
+🔍 Round 24: GSV Verification
+=======================================================
+✅ Client 2027: Accepted (score: 1.4652, threshold: 4.7022)
+✅ Client 2025: Accepted (score: 1.4372, threshold: 4.7022)
+✅ Client 2024: Accepted (score: 1.0974, threshold: 4.7022)
+✅ Client 2023: Accepted (score: 0.6860, threshold: 4.7022)
+✅ Client 2026: Accepted (score: 3.5700, threshold: 4.7022)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2022
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9491
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9328657314629258, 0.9769539078156313, 0.9768844221105528, 0.9517102615694165, 0.907258064516129]
+===================================
+
+🔍 Round 26: GSV Aggregation
+============================================================
+
+🔍 Round 25: GSV Verification
+=======================================================
+✅ Client 2025: Accepted (score: 0.6101, threshold: 4.7193)
+✅ Client 2023: Accepted (score: 0.6228, threshold: 4.7193)
+✅ Client 2026: Accepted (score: 2.8173, threshold: 4.7193)
+✅ Client 2024: Accepted (score: 0.7975, threshold: 4.7193)
+✅ Client 2027: Accepted (score: 0.4219, threshold: 4.7193)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2193
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9303
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9599198396793587, 0.9417085427135679, 0.9446680080482898, 0.905811623246493, 0.8991935483870968]
+===================================
+
+🔍 Round 27: GSV Aggregation
+============================================================
+
+🔍 Round 26: GSV Verification
+=======================================================
+✅ Client 2026: Accepted (score: 0.9915, threshold: 4.7193)
+✅ Client 2023: Accepted (score: 0.5062, threshold: 4.7193)
+✅ Client 2025: Accepted (score: 0.7680, threshold: 4.7193)
+✅ Client 2024: Accepted (score: 0.7003, threshold: 4.7193)
+✅ Client 2027: Accepted (score: 0.5946, threshold: 4.7193)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2193
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9013
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9085427135678392, 0.9408817635270541, 0.8780241935483871, 0.8486973947895792, 0.9305835010060363]
+===================================
+
+🔍 Round 28: GSV Aggregation
+============================================================
+
+🔍 Round 27: GSV Verification
+=======================================================
+✅ Client 2023: Accepted (score: 0.6019, threshold: 4.7193)
+✅ Client 2027: Accepted (score: 0.6654, threshold: 4.7193)
+✅ Client 2026: Accepted (score: 0.8654, threshold: 4.7193)
+✅ Client 2024: Accepted (score: 1.0178, threshold: 4.7193)
+✅ Client 2025: Accepted (score: 0.8462, threshold: 4.7193)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2193
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.8861
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9228456913827655, 0.9215291750503019, 0.8316633266533067, 0.8719758064516129, 0.8824120603015075]
+===================================
+
+🔍 Round 29: GSV Aggregation
+============================================================
+
+🔍 Round 28: GSV Verification
+=======================================================
+✅ Client 2023: Accepted (score: 0.5731, threshold: 4.7193)
+✅ Client 2026: Accepted (score: 1.0288, threshold: 4.7193)
+✅ Client 2024: Accepted (score: 0.8384, threshold: 4.7193)
+✅ Client 2027: Accepted (score: 0.5825, threshold: 4.7193)
+✅ Client 2025: Accepted (score: 0.5229, threshold: 4.7193)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2193
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.8768
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.8206412825651302, 0.8669354838709677, 0.9118236472945892, 0.8723618090452261, 0.9124748490945674]
+===================================
+
+🔍 Round 30: GSV Aggregation
+============================================================
+
+🔍 Round 29: GSV Verification
+=======================================================
+✅ Client 2027: Accepted (score: 0.4666, threshold: 4.7193)
+✅ Client 2026: Accepted (score: 1.6221, threshold: 4.7193)
+✅ Client 2025: Accepted (score: 0.7811, threshold: 4.7193)
+✅ Client 2023: Accepted (score: 0.5823, threshold: 4.7193)
+✅ Client 2024: Accepted (score: 0.7638, threshold: 4.7193)
+📊 Acceptance: 5/5 (100.00%)
+🎯 Dynamic Threshold: 4.2193
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.8973
+Total Examples: 10000
+Participating Clients: 5
+Individual Client Recalls: [0.9114688128772636, 0.905811623246493, 0.9276381909547738, 0.8677354709418837, 0.873991935483871]
+===================================
