@@ -13,12 +13,33 @@ from client_augment import augment_client_data
 import os
 import sys
 import atexit
+import argparse
 from datetime import datetime
 
 #---------------------------------------------------------------
+# Parse command line arguments
+def parse_args():
+    parser = argparse.ArgumentParser(description='Federated Learning Client')
+    parser.add_argument('client_id', type=int, help='Client ID number')
+    parser.add_argument('--malicious', '--mal', action='store_true', 
+                       help='Make this client malicious')
+    parser.add_argument('--random', '--rand', action='store_true',
+                       help='If malicious, attack randomly after warmup (default: continuous attack)')
+    parser.add_argument('--warmup', type=int, default=15,
+                       help='Number of warmup rounds (default: 15)')
+    parser.add_argument('--attack_probability', type=float, default=0.3,
+                       help='Probability of attack in each round when random=True (default: 0.3)')
+    return parser.parse_args()
+
+args = parse_args()
+client_id_from_args = args.client_id
+is_malicious = args.malicious
+random_attack = args.random
+warmup_rounds = args.warmup
+attack_probability = args.attack_probability
+
 os.makedirs("logs", exist_ok=True)
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-client_id_from_args = int(sys.argv[1]) if len(sys.argv) > 1 else np.random.randint(0, 1000)
 log_file = open(f"logs/fl_client_{client_id_from_args}_{timestamp}.txt", "w")
 
 # Store original streams
@@ -66,17 +87,22 @@ sys.stderr = Tee(sys.stderr, log_file)
 #---------------------------------------------------------------
 
 class HeartClient(fl.client.NumPyClient):
-    def __init__(self, X, y, client_id, is_malicious=False):
+    def __init__(self, X, y, client_id, is_malicious=False, random_attack=False, warmup_rounds=15, attack_probability=0.3):
         self.X = X
         self.y = y
         self.client_id = client_id
         self.is_malicious = is_malicious
+        self.random_attack = random_attack
+        self.attack_probability = attack_probability
         self.current_round = 0
-        self.warmup_rounds = 15  # ✅ Match server warmup rounds
-        self.original_y = y.copy()  # ✅ Keep original labels
+        self.warmup_rounds = warmup_rounds
+        self.original_y = y.copy()
         self.attack_active = False
         
-        # ✅ Track if client has been detected/blocked
+        # ✅ Track attack history for random attacks
+        self.attack_history = []
+        self.total_attacks = 0
+        
         self.detection_count = 0
         self.is_blocked = False
         
@@ -125,15 +151,13 @@ class HeartClient(fl.client.NumPyClient):
         print("-" * 60)
         print(f"Round {self.current_round}: Fitting model on client {self.client_id}")
         
-        # ✅ Check if client should be blocked (simulated)
         if self.is_blocked:
             print(f"❌ Client {self.client_id} is blocked - cannot participate")
             return self.get_parameters(), len(self.X), {"client_id": str(self.client_id)}
         
-        # Set parameters from server
         self.set_parameters(parameters)
         
-        # ✅ Implement delayed malicious behavior
+        # ✅ Implement delayed malicious behavior with random option
         if self.is_malicious:
             if self.current_round < self.warmup_rounds:
                 # Behave normally during warmup
@@ -142,14 +166,39 @@ class HeartClient(fl.client.NumPyClient):
                     self.y = self.original_y.copy()
                     self.attack_active = False
             else:
-                # Start attacking after warmup
-                if not self.attack_active:
-                    print(f"⚠️  Client {self.client_id}: Starting malicious attack (label flipping)")
-                    # Flip ALL labels for maximum impact
+                # After warmup: decide whether to attack
+                should_attack = False
+                
+                if self.random_attack:
+                    # Random attack: decide probabilistically each round
+                    should_attack = np.random.random() < self.attack_probability
+                    if should_attack:
+                        print(f"⚠️  Client {self.client_id}: Random malicious attack triggered (prob: {self.attack_probability})")
+                        self.attack_history.append(self.current_round)
+                        self.total_attacks += 1
+                    else:
+                        print(f"😇 Client {self.client_id}: Behaving normally this round (random mode)")
+                else:
+                    # Continuous attack: always attack after warmup
+                    should_attack = True
+                    if not self.attack_active:
+                        print(f"⚠️  Client {self.client_id}: Starting continuous malicious attack")
+                        self.total_attacks += 1
+                    else:
+                        print(f"⚠️  Client {self.client_id}: Continuing continuous malicious attack")
+                
+                # Apply or remove attack based on decision
+                if should_attack and not self.attack_active:
+                    # Start attack
                     self.y = 1 - self.original_y
                     self.attack_active = True
-                else:
-                    print(f"⚠️  Client {self.client_id}: Continuing malicious attack")
+                elif not should_attack and self.attack_active:
+                    # Stop attack (only relevant for random mode)
+                    self.y = self.original_y.copy()
+                    self.attack_active = False
+                elif should_attack and self.attack_active:
+                    # Continue attack
+                    self.y = 1 - self.original_y
         
         # Transform data using RBF sampler
         X_transformed = self.model.named_steps['rbfsampler'].transform(self.X)
@@ -161,8 +210,13 @@ class HeartClient(fl.client.NumPyClient):
             self.model.named_steps['sgdclassifier'].partial_fit(X_transformed, self.y)
 
         print(f"✅ Client {self.client_id}: Training completed for round {self.current_round}")
-        if self.is_malicious and self.attack_active:
-            print(f"🔥 Malicious labels distribution: {np.bincount(self.y)}")
+        if self.is_malicious:
+            if self.attack_active:
+                print(f"🔥 Malicious labels distribution: {np.bincount(self.y)}")
+                if self.random_attack:
+                    print(f"📊 Attack stats: {self.total_attacks} attacks in {len(self.attack_history)} rounds")
+            else:
+                print(f"😇 Normal labels distribution: {np.bincount(self.y)}")
         
         self.current_round += 1
         return self.get_parameters(), len(self.X), {"client_id": str(self.client_id)}
@@ -191,9 +245,7 @@ if __name__ == "__main__":
     print("-" * 60)
     print("Loading and preprocessing client data...")
 
-    # Get client ID and malicious flag from command line
     client_id = client_id_from_args
-    is_malicious = len(sys.argv) > 2 and sys.argv[2].lower() in ["mal", "malicious", "--mal"]   
 
     df = load_dataset()
     df = basic_cleaning(df)
@@ -213,18 +265,17 @@ if __name__ == "__main__":
     print(f"Client ID: {client_id}")
     print(f"Random seed used: {client_id}")
     print(f"Malicious client? {'✅ YES' if is_malicious else '❌ NO'}")
+    if is_malicious:
+        print(f"Attack mode: {'🎲 RANDOM' if random_attack else '🔄 CONTINUOUS'}")
+        print(f"Warmup rounds: {warmup_rounds}")
+        if random_attack:
+            print(f"Attack probability: {attack_probability}")
     print("Class distribution in this client:")
     print(np.bincount(y_part))
     print("Data shape before augmentation:", X_part.shape)
     
-    # ✅ Remove immediate label flipping - will be handled in fit() method
-    # if is_malicious:
-    #     print("⚠️  Malicious behavior: Partially flipping labels")
-    #     ...
-
     print("-" * 60)
 
-    # ✅ Augment the client data before training
     X_aug, y_aug = augment_client_data(X_part, y_part, target_size=2000, method="combined")
 
     print("✅ Client data augmented")
@@ -232,11 +283,16 @@ if __name__ == "__main__":
     print("New class distribution:", np.bincount(y_aug))
     print("-" * 60)
 
-    client = HeartClient(X_aug, y_aug, client_id, is_malicious)
+    client = HeartClient(X_aug, y_aug, client_id, is_malicious, random_attack, warmup_rounds, attack_probability)
 
     print(f"Starting Federated Learning Client {client_id}...")
     if is_malicious:
-        print("⚠️  Malicious behavior will activate after warmup rounds")
+        attack_mode = "random" if random_attack else "continuous"
+        print(f"⚠️  Malicious behavior ({attack_mode}) will activate after {warmup_rounds} warmup rounds")
+    print("Usage examples:")
+    print("  python fl_client.py 1 --malicious --random --warmup 10")
+    print("  python fl_client.py 2 --mal --rand --attack_probability 0.5")
+    print("  python fl_client.py 3 --malicious --warmup 20")
     print("-" * 60)
 
     try:

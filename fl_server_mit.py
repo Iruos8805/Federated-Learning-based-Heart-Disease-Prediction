@@ -20,11 +20,14 @@ def parse_args():
                        help='Number of clients to use (default: 3)')
     parser.add_argument('--num_rounds', '-r', type=int, default=30,
                        help='Number of training rounds (default: 30)')
+    parser.add_argument('--warmup', type=int, default=15,
+                       help='Number of warmup rounds (default: 15)')
     return parser.parse_args()
 
 args = parse_args()
 num_clients = args.num_clients
 num_rounds = args.num_rounds
+warmup_rounds = args.warmup
 
 # Logging setup with proper cleanup
 os.makedirs("logs", exist_ok=True)
@@ -106,7 +109,7 @@ def start_server():
     """
     print("-" * 60)
     print("🚀 Starting Federated Learning Server with GSV Defense")
-    print(f"📊 Configuration: {num_clients} clients, {num_rounds} rounds")
+    print(f"📊 Configuration: {num_clients} clients, {num_rounds} rounds, {warmup_rounds} warmup")
     print("-" * 60)
 
     # Load validation data (kept for compatibility, not used in GSV)
@@ -122,6 +125,7 @@ def start_server():
     # Create GSV strategy with dynamic client configuration
     try:
         strategy = GSVStrategy(
+            warmup_rounds=warmup_rounds,
             min_fit_clients=num_clients,
             min_available_clients=num_clients,
             min_evaluate_clients=num_clients,
@@ -132,6 +136,7 @@ def start_server():
         print("✅ GSV strategy initialized successfully")
         print(f"   • Minimum clients required: {num_clients}")
         print(f"   • Training rounds: {num_rounds}")
+        print(f"   • Warmup rounds: {warmup_rounds}")
     except Exception as e:
         print(f"❌ Error creating GSV strategy: {e}")
         raise
@@ -183,9 +188,9 @@ def start_server():
 
 
 if __name__ == '__main__':
-    print(f"🔧 Server starting with {num_clients} clients for {num_rounds} rounds")
-    print("Usage: python fl_server_mit.py --num_clients 5 --num_rounds 25")
-    print("   or: python fl_server_mit.py -n 5 -r 25")
+    print(f"🔧 Server starting with {num_clients} clients for {num_rounds} rounds ({warmup_rounds} warmup)")
+    print("Usage: python fl_server_mit.py --num_clients 5 --num_rounds 25 --warmup 10")
+    print("   or: python fl_server_mit.py -n 5 -r 25 --warmup 10")
     print("-" * 60)
     
     try:

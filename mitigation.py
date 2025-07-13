@@ -14,10 +14,11 @@ warnings.filterwarnings("ignore")
 os.makedirs("logs", exist_ok=True)
 
 class GradientSignatureVerifier:
-    def __init__(self, signature_window=10, anomaly_threshold=1.8, profile_decay=0.95):
+    def __init__(self, signature_window=10, anomaly_threshold=1.8, profile_decay=0.95, warmup_rounds=15):
         self.signature_window = signature_window
         self.anomaly_threshold = anomaly_threshold
         self.profile_decay = profile_decay
+        self.warmup_rounds = warmup_rounds  # ✅ Make warmup configurable
 
         self.client_profiles = {}
         self.round_count = 0
@@ -164,14 +165,12 @@ class GradientSignatureVerifier:
         filtered_updates = []
         client_scores = []
 
-        warmup_rounds = 15
         min_updates_required = 3
         confidence_margin = 0.2
 
         for i, (client_proxy, fit_res) in enumerate(client_updates):
             client_id = self._get_client_id(client_proxy, fit_res)
             
-            # ✅ Check if client is already blocked
             if client_id in self.blocked_clients:
                 print(f"\U0001F6AB Client {client_id}: BLOCKED (previously detected)")
                 with open(self.score_log_path, "a") as f:
@@ -187,8 +186,8 @@ class GradientSignatureVerifier:
             is_filtered = False
             is_blocked = False
 
-            if self.round_count < warmup_rounds or profile['update_count'] < min_updates_required:
-                print(f"\U0001F501 Client {client_id}: Warming up (score: {score:.4f})")
+            if self.round_count < self.warmup_rounds or profile['update_count'] < min_updates_required:
+                print(f"\U0001F501 Client {client_id}: Warming up (score: {score:.4f}) [Round {self.round_count}/{self.warmup_rounds}]")
                 self.update_client_profile(client_id, signature)
                 filtered_updates.append((client_proxy, fit_res))
             elif score > self.adaptive_threshold + confidence_margin:
@@ -208,8 +207,6 @@ class GradientSignatureVerifier:
                 self.attack_detection_count += 1
                 self.total_updates_filtered += 1
                 is_filtered = True
-                
-                # Don't add to filtered_updates - this client is rejected
             else:
                 print(f"\u2705 Client {client_id}: Accepted (score: {score:.4f})")
                 self.update_client_profile(client_id, signature)
@@ -266,9 +263,9 @@ class GradientSignatureVerifier:
 
 
 class GSVStrategy(fl.server.strategy.FedAvg):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, warmup_rounds=15, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.gsv_verifier = GradientSignatureVerifier()
+        self.gsv_verifier = GradientSignatureVerifier(warmup_rounds=warmup_rounds)
 
     def aggregate_fit(
         self,
