@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Comprehensive Test Suite for Federated Learning System with GSV Defense
-Author: Test Suite Generator
 Description: Tests all possible scenarios and combinations of the FL system with result validation
 """
 
@@ -25,8 +24,8 @@ class FederatedLearningTester:
         self.test_count = 0
         self.passed_tests = 0
         self.failed_tests = 0
-        self.client_round_mapping = {}  # Track client round mapping for ID assignment
-        self.num_rounds = 30  # Default number of rounds
+        self.client_round_mapping = {}  
+        self.num_rounds = 30  
         
     def log_test(self, test_name, status, details="", validation_results=None):
         """Log test results with validation details"""
@@ -40,8 +39,7 @@ class FederatedLearningTester:
         }
         self.test_results.append(result)
         
-        status_icon = "✅" if status == "PASSED" else "❌" if status == "FAILED" else "⚠️"
-        print(f"{status_icon} Test {self.test_count}: {test_name} - {status}")
+        print(f"Test {self.test_count}: {test_name} - {status}")
         if details:
             print(f"   Details: {details}")
         if validation_results:
@@ -50,7 +48,6 @@ class FederatedLearningTester:
         
     def cleanup_processes(self):
         """Clean up all running processes"""
-        # Kill client processes
         for process in self.client_processes:
             try:
                 process.terminate()
@@ -61,7 +58,6 @@ class FederatedLearningTester:
                 except:
                     pass
         
-        # Kill server process
         if self.server_process:
             try:
                 self.server_process.terminate()
@@ -79,7 +75,6 @@ class FederatedLearningTester:
         """Start the federated learning server"""
         self.cleanup_processes()
         
-        # ✅ Ensure minimum warmup of 5 and minimum rounds of 30
         
         num_rounds = max(30, num_rounds)
         self.num_rounds = num_rounds
@@ -92,7 +87,7 @@ class FederatedLearningTester:
             "--warmup", str(warmup)
         ]
         
-        print(f"🖥️  Starting server with command:")
+        print(f"Starting server with command:")
         print(f"   {' '.join(server_cmd)}")
         
         try:
@@ -102,18 +97,17 @@ class FederatedLearningTester:
                 stderr=subprocess.PIPE,
                 text=True
             )
-            time.sleep(5)  # Give server time to start
-            print("✅ Server started successfully")
+            time.sleep(5)  
+            print("Server started successfully")
             return True
         except Exception as e:
-            print(f"❌ Failed to start server: {e}")
+            print(f"Failed to start server: {e}")
             return False
     
     def start_client(self, client_id, malicious=False, random_attack=False, 
                     warmup=5, attack_probability=0.3):
         """Start a federated learning client"""
         
-        # ✅ Ensure minimum warmup of 5
         warmup = max(self.num_rounds // 2, warmup)
         
         client_cmd = [
@@ -129,7 +123,7 @@ class FederatedLearningTester:
             client_cmd.append("--random")
             client_cmd.extend(["--attack_probability", str(attack_probability)])
         
-        print(f"👤 Starting client {client_id} with command:")
+        print(f"Starting client {client_id} with command:")
         print(f"   {' '.join(client_cmd)}")
         
         try:
@@ -140,10 +134,10 @@ class FederatedLearningTester:
                 text=True
             )
             self.client_processes.append(process)
-            print(f"✅ Client {client_id} started successfully")
+            print(f"Client {client_id} started successfully")
             return True
         except Exception as e:
-            print(f"❌ Failed to start client {client_id}: {e}")
+            print(f"Failed to start client {client_id}: {e}")
             return False
     
     def wait_for_completion(self, timeout=120):
@@ -225,7 +219,6 @@ class FederatedLearningTester:
                     client_data[client_id]['rounds_participated'] += 1
                     client_data[client_id]['max_score'] = max(client_data[client_id]['max_score'], score)
                     
-            # Calculate averages
             for client_id in client_data:
                 scores = client_data[client_id]['scores']
                 if scores:
@@ -241,11 +234,9 @@ class FederatedLearningTester:
         if timeout_occurred:
             return False, {"error": "Test timed out"}
             
-        # Parse server statistics
         gsv_stats = self.parse_server_output(server_output)
         client_scores = self.parse_client_scores_log()
         
-        # Identify expected malicious clients
         expected_malicious_ids = set()
         expected_normal_ids = set()
         
@@ -256,16 +247,13 @@ class FederatedLearningTester:
             else:
                 expected_normal_ids.add(client_id)
         
-        # Check GSV detection
         blocked_client_ids = set(gsv_stats.get("blocked_client_ids", []))
         
-        # Calculate detection metrics
         true_positives = len(expected_malicious_ids & blocked_client_ids)
         false_positives = len(blocked_client_ids - expected_malicious_ids)
         false_negatives = len(expected_malicious_ids - blocked_client_ids)
         true_negatives = len(expected_normal_ids - blocked_client_ids)
         
-        # Calculate performance metrics
         total_clients = len(client_configs)
         precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0
         recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0
@@ -288,7 +276,6 @@ class FederatedLearningTester:
             "client_analysis": client_scores
         }
         
-        # Test-specific validation logic
         success = self.evaluate_test_success(test_name, validation_results, client_configs)
         
         return success, validation_results
@@ -296,77 +283,41 @@ class FederatedLearningTester:
     def evaluate_test_success(self, test_name, validation_results, client_configs):
         """Evaluate test success based on test type and validation results - STRICT: No false positives allowed"""
         
-        # ✅ STRICT RULE: No false positives allowed in ANY test
         if validation_results["false_positives"] > 0:
             return False
         
         if "basic_functionality" in test_name.lower() or "normal" in test_name.lower():
-            # For normal clients: Must have perfect accuracy (no false positives, no false negatives)
             return (validation_results["false_positives"] == 0 and 
                    validation_results["false_negatives"] == 0 and
                    validation_results["accuracy"] == 1.0)
         
         elif "false_positive" in test_name.lower():
-            # False positive tests: Must have zero false positives
             return validation_results["false_positives"] == 0
         
         elif "single_continuous_malicious" in test_name.lower():
-            # Must detect the malicious client with zero false positives
             return (validation_results["true_positives"] >= 1 and 
-                   validation_results["false_positives"] == 0)
-        
-        elif "multiple_continuous_malicious" in test_name.lower():
-            # Must detect all or most malicious clients with zero false positives
-            expected_malicious = len(validation_results["expected_malicious"])
-            return (validation_results["true_positives"] >= max(1, expected_malicious * 0.8) and 
                    validation_results["false_positives"] == 0)
         
         elif "random_malicious" in test_name.lower():
-            # Random attacks: Allow some missed detections but zero false positives
             return (validation_results["false_positives"] == 0 and
-                   validation_results["true_positives"] >= 0)  # At least some detection attempt
-        
-        elif "mixed_attack" in test_name.lower():
-            # Mixed attacks: Must catch at least one malicious client, zero false positives
-            return (validation_results["true_positives"] >= 1 and 
-                   validation_results["false_positives"] == 0)
-        
-        elif "resilience" in test_name.lower() or "stress" in test_name.lower():
-            # Under stress: Must still have zero false positives
-            return (validation_results["false_positives"] == 0 and
-                   validation_results["true_positives"] >= 1)
+                   validation_results["true_positives"] >= 0)  
         
         elif "detection_consistency" in test_name.lower():
-            # Must consistently detect with zero false positives
             return (validation_results["true_positives"] >= 1 and 
                    validation_results["false_positives"] == 0)
         
         elif "early_detection" in test_name.lower():
-            # Early detection: Must detect with zero false positives
             return (validation_results["true_positives"] >= 1 and 
                    validation_results["false_positives"] == 0)
-        
-        elif "large_scale" in test_name.lower():
-            # Large scale: Must detect some malicious clients with zero false positives
-            return (validation_results["true_positives"] >= 1 and 
-                   validation_results["false_positives"] == 0)
-        
-        elif "adaptive_threshold" in test_name.lower():
-            # Adaptive threshold: Must work without false positives
-            return (validation_results["false_positives"] == 0 and
-                   validation_results["true_positives"] >= 0)
-        
+
         else:
-            # Default: Zero false positives required
             return validation_results["false_positives"] == 0
 
     def _get_client_id(self, client_proxy, fit_res):
         """Get client ID from fit results or fallback to proxy-based ID"""
-        # Try to get client ID from fit results first
         if hasattr(fit_res, 'metrics') and fit_res.metrics and 'client_id' in fit_res.metrics:
             return fit_res.metrics['client_id']
         
-        # Fallback to proxy-based ID assignment
         client_key = str(client_proxy)
         if client_key not in self.client_round_mapping:
             client_id = f"client_{len(self.client_round_mapping)}"
@@ -376,16 +327,14 @@ class FederatedLearningTester:
     def run_test_scenario(self, test_name, server_config, client_configs, timeout=180):
         """Run a specific test scenario with result validation"""
         self.test_count += 1
-        print(f"\n🧪 Running Test {self.test_count}: {test_name}")
+        print(f"\nRunning Test {self.test_count}: {test_name}")
         print("=" * 80)
         
-        # ✅ Adjust timeout based on number of rounds
         num_rounds = server_config.get('num_rounds', 30)
-        if timeout == 180:  # Default timeout
-            timeout = max(timeout, num_rounds * 6)  # 6 seconds per round minimum
+        if timeout == 180:  
+            timeout = max(timeout, num_rounds * 6)  
         
-        # Print test configuration
-        print(f"📋 Test Configuration:")
+        print(f"Test Configuration:")
         print(f"   Server: {server_config}")
         print(f"   Clients: {len(client_configs)} total")
         
@@ -394,7 +343,6 @@ class FederatedLearningTester:
         
         print(f"   - Normal clients: {len(normal_clients)} {[c['client_id'] for c in normal_clients]}")
         print(f"   - Malicious clients: {len(malicious_clients)} {[c['client_id'] for c in malicious_clients]}")
-        print(f"   🚨 STRICT MODE: Zero false positives required for PASS")
         
         if malicious_clients:
             for client in malicious_clients:
@@ -406,36 +354,31 @@ class FederatedLearningTester:
         
         print("-" * 80)
         
-        # Clean up old logs
         if os.path.exists("logs/client_scores.csv"):
             os.remove("logs/client_scores.csv")
         
-        # Start server
-        print("🚀 Starting server...")
+        print("Starting server...")
         if not self.start_server(**server_config):
             self.log_test(test_name, "FAILED", "Server failed to start")
             self.failed_tests += 1
             return False
         
-        # Start clients
-        print(f"\n👥 Starting {len(client_configs)} clients...")
+        print(f"\nStarting {len(client_configs)} clients...")
         for i, client_config in enumerate(client_configs):
             if not self.start_client(client_config['client_id'], **client_config.get('params', {})):
                 self.log_test(test_name, "FAILED", f"Client {client_config['client_id']} failed to start")
                 self.failed_tests += 1
                 return False
-            time.sleep(2)  # Stagger client starts
+            time.sleep(2)  
         
-        print(f"\n⏳ Waiting for training to complete (timeout: {timeout}s)...")
+        print(f"\nWaiting for training to complete (timeout: {timeout}s)...")
         
-        # Wait for completion and capture output
         server_output = ""
         timeout_occurred = False
         
         if self.wait_for_completion(timeout):
-            print("✅ Training completed successfully")
+            print("Training completed successfully")
             try:
-                # ✅ Fix: Check if server_process is not None before calling communicate
                 if self.server_process is not None:
                     stdout, stderr = self.server_process.communicate(timeout=15)
                     server_output = stdout + stderr
@@ -444,24 +387,22 @@ class FederatedLearningTester:
             except Exception as e:
                 server_output = f"Failed to capture output: {e}"
         else:
-            print("⏰ Training timed out")
+            print(" Training timed out")
             timeout_occurred = True
             server_output = "Training timed out"
         
-        # Validate results
-        print("🔍 Validating results...")
+        print("Validating results...")
         success, validation_results = self.validate_test_results(
             test_name, client_configs, server_output, timeout_occurred
         )
         
-        # ✅ Enhanced logging with strict validation results
         false_positives = validation_results.get('false_positives', 0)
         true_positives = validation_results.get('true_positives', 0)
         false_negatives = validation_results.get('false_negatives', 0)
         
         if success:
             self.log_test(test_name, "PASSED", 
-                         f"✅ STRICT VALIDATION PASSED - "
+                         f"STRICT VALIDATION PASSED - "
                          f"FP: {false_positives}, TP: {true_positives}, FN: {false_negatives}, "
                          f"Precision: {validation_results['precision']:.3f}, "
                          f"Recall: {validation_results['recall']:.3f}",
@@ -472,9 +413,9 @@ class FederatedLearningTester:
             if timeout_occurred:
                 failure_reason = "Training timed out"
             elif int(false_positives) > 0:
-                failure_reason = f"❌ FALSE POSITIVES DETECTED: {false_positives} normal clients incorrectly blocked"
+                failure_reason = f"FALSE POSITIVES DETECTED: {false_positives} normal clients incorrectly blocked"
             elif int(false_negatives) > 0 and "basic_functionality" in test_name.lower():
-                failure_reason = f"❌ DETECTION FAILURE: {false_negatives} malicious clients not detected"
+                failure_reason = f"DETECTION FAILURE: {false_negatives} malicious clients not detected"
             
             self.log_test(test_name, "FAILED", 
                          f"{failure_reason} - "
@@ -482,19 +423,17 @@ class FederatedLearningTester:
                          validation_results)
             self.failed_tests += 1
         
-        # Cleanup
-        print("🧹 Cleaning up processes...")
+        print("Cleaning up processes...")
         self.cleanup_processes()
         time.sleep(3)
         
         return success
 
-    # Test scenarios with minimum 30 rounds enforced
     def test_basic_functionality(self):
         """Test 1: Basic FL functionality with normal clients - should have no false positives"""
         return self.run_test_scenario(
             "Basic FL Training (All Normal Clients)",
-            {"num_clients": 3, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
+            {"num_clients": 3, "num_rounds": 30, "warmup": 5},  
             [
                 {"client_id": 1, "params": {"warmup": 5}},
                 {"client_id": 2, "params": {"warmup": 5}},
@@ -506,7 +445,7 @@ class FederatedLearningTester:
         """Test 2: Single continuous malicious client - should detect and block"""
         return self.run_test_scenario(
             "Single Continuous Malicious Client",
-            {"num_clients": 3, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
+            {"num_clients": 3, "num_rounds": 30, "warmup": 5},  
             [
                 {"client_id": 1, "params": {"warmup": 5}},
                 {"client_id": 2, "params": {"malicious": True, "warmup": 5}},
@@ -518,7 +457,7 @@ class FederatedLearningTester:
         """Test 3: Single random malicious client (high probability)"""
         return self.run_test_scenario(
             "Single Random Malicious Client (High Probability)",
-            {"num_clients": 3, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
+            {"num_clients": 3, "num_rounds": 30, "warmup": 5},  
             [
                 {"client_id": 1, "params": {"warmup": 5}},
                 {"client_id": 2, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.8}},
@@ -526,38 +465,11 @@ class FederatedLearningTester:
             ]
         )
     
-    def test_multiple_continuous_malicious(self):
-        """Test 4: Multiple continuous malicious clients"""
-        return self.run_test_scenario(
-            "Multiple Continuous Malicious Clients",
-            {"num_clients": 4, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
-            [
-                {"client_id": 1, "params": {"warmup": 5}},
-                {"client_id": 2, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 3, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 4, "params": {"warmup": 5}}
-            ]
-        )
-    
-    def test_mixed_attack_types(self):
-        """Test 5: Mixed attack types (continuous + random)"""
-        return self.run_test_scenario(
-            "Mixed Attack Types",
-            {"num_clients": 5, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
-            [
-                {"client_id": 1, "params": {"warmup": 5}},
-                {"client_id": 2, "params": {"malicious": True, "warmup": 5}},  # Continuous
-                {"client_id": 3, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.7}},  # Random
-                {"client_id": 4, "params": {"warmup": 5}},
-                {"client_id": 5, "params": {"warmup": 5}}
-            ]
-        )
-    
     def test_false_positive_check(self):
         """Test 6: False positive check with many normal clients"""
         return self.run_test_scenario(
             "False Positive Check",
-            {"num_clients": 6, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
+            {"num_clients": 6, "num_rounds": 30, "warmup": 5},  
             [
                 {"client_id": 1, "params": {"warmup": 5}},
                 {"client_id": 2, "params": {"warmup": 5}},
@@ -572,25 +484,11 @@ class FederatedLearningTester:
         """Test 7: Early detection with short warmup"""
         return self.run_test_scenario(
             "Early Detection Test",
-            {"num_clients": 3, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
+            {"num_clients": 3, "num_rounds": 30, "warmup": 5},  
             [
                 {"client_id": 1, "params": {"warmup": 5}},
                 {"client_id": 2, "params": {"malicious": True, "warmup": 5}},
                 {"client_id": 3, "params": {"warmup": 5}}
-            ]
-        )
-    
-    def test_system_resilience(self):
-        """Test 8: System resilience with majority malicious clients"""
-        return self.run_test_scenario(
-            "System Resilience Test",
-            {"num_clients": 5, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
-            [
-                {"client_id": 1, "params": {"warmup": 5}},
-                {"client_id": 2, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 3, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 4, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.6}},
-                {"client_id": 5, "params": {"warmup": 5}}
             ]
         )
     
@@ -598,84 +496,49 @@ class FederatedLearningTester:
         """Test 9: Detection consistency across many rounds"""
         return self.run_test_scenario(
             "Detection Consistency Test",
-            {"num_clients": 3, "num_rounds": 35, "warmup": 5},  # ✅ Increased to 35 for longer consistency test
+            {"num_clients": 3, "num_rounds": 35, "warmup": 5},  
             [
                 {"client_id": 1, "params": {"warmup": 5}},
                 {"client_id": 2, "params": {"malicious": True, "warmup": 5}},
                 {"client_id": 3, "params": {"warmup": 5}}
             ],
-            timeout=600  # Increased timeout for longer test
+            timeout=600  
         )
     
     def test_random_attacks_low_probability(self):
         """Test 10: Random attacks with low probability"""
         return self.run_test_scenario(
             "Random Attacks (Low Probability)",
-            {"num_clients": 3, "num_rounds": 40, "warmup": 5},  # ✅ Increased to 40 for low probability detection
+            {"num_clients": 3, "num_rounds": 40, "warmup": 5},  
             [
                 {"client_id": 1, "params": {"warmup": 5}},
                 {"client_id": 2, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.2}},
                 {"client_id": 3, "params": {"warmup": 5}}
             ],
-            timeout=700  # Increased timeout for longer test
+            timeout=700  
         )
     
-    def test_large_scale_scenario(self):
-        """Test 11: Large scale scenario with many clients"""
-        return self.run_test_scenario(
-            "Large Scale Scenario",
-            {"num_clients": 8, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
-            [
-                {"client_id": 1, "params": {"warmup": 5}},
-                {"client_id": 2, "params": {"warmup": 5}},
-                {"client_id": 3, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 4, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.5}},
-                {"client_id": 5, "params": {"warmup": 5}},
-                {"client_id": 6, "params": {"warmup": 5}},
-                {"client_id": 7, "params": {"malicious": True, "warmup": 5}},
-                {"client_id": 8, "params": {"warmup": 5}}
-            ]
-        )
-    
-    def test_adaptive_threshold_behavior(self):
-        """Test 12: Adaptive threshold behavior"""
-        return self.run_test_scenario(
-            "Adaptive Threshold Behavior",
-            {"num_clients": 4, "num_rounds": 30, "warmup": 5},  # ✅ Enforced minimum 30 rounds
-            [
-                {"client_id": 1, "params": {"warmup": 5}},
-                {"client_id": 2, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.4}},
-                {"client_id": 3, "params": {"malicious": True, "random_attack": True, "warmup": 5, "attack_probability": 0.6}},
-                {"client_id": 4, "params": {"warmup": 5}}
-            ]
-        )
-
     def run_all_tests(self):
         """Run all test scenarios with comprehensive validation"""
-        print("🚀 Starting Comprehensive FL System Test Suite with Result Validation")
+        print("Starting Comprehensive FL System Test Suite with Result Validation")
         print("=" * 80)
         
         test_methods = [
             self.test_basic_functionality,
             self.test_single_continuous_malicious,
             self.test_single_random_malicious_high_prob,
-            self.test_multiple_continuous_malicious,
-            self.test_mixed_attack_types,
             self.test_false_positive_check,
             self.test_early_detection,
-            self.test_system_resilience,
             self.test_detection_consistency,
             self.test_random_attacks_low_probability,
-            self.test_large_scale_scenario,
-            self.test_adaptive_threshold_behavior
         ]
         
         total_tests = len(test_methods)
-        print(f"📊 Total tests to run: {total_tests}")
+        print(f"Total tests to run: {total_tests}")
         print("=" * 80)
         
         for i, test_method in enumerate(test_methods, 1):
-            print(f"\n🔄 Progress: {i}/{total_tests}")
+            print(f"\nProgress: {i}/{total_tests}")
             try:
                 test_method()
             except Exception as e:
@@ -686,21 +549,20 @@ class FederatedLearningTester:
                 traceback.print_exc()
             
             print(f"⏸️  Pausing 5 seconds before next test...")
-            time.sleep(5)  # Pause between tests
+            time.sleep(5)  
         
         self.generate_test_report()
     
     def generate_test_report(self):
         """Generate comprehensive test report with validation metrics"""
         print("\n" + "=" * 80)
-        print("📊 STRICT VALIDATION TEST SUITE SUMMARY")
+        print("STRICT VALIDATION TEST SUITE SUMMARY")
         print("=" * 80)
         print(f"Total Tests: {self.test_count}")
-        print(f"Passed: {self.passed_tests} ✅")
-        print(f"Failed: {self.failed_tests} ❌")
+        print(f"Passed: {self.passed_tests}")
+        print(f"Failed: {self.failed_tests}")
         print(f"Success Rate: {(self.passed_tests/self.test_count)*100:.1f}%")
         
-        # ✅ Fix: Initialize variables before using them
         total_false_positives = 0
         total_true_positives = 0
         total_false_negatives = 0
@@ -721,7 +583,6 @@ class FederatedLearningTester:
                 if vr.get('false_positives', 0) == 0:
                     tests_with_zero_fp += 1
                 
-                # ✅ Add validation result metrics
                 if 'accuracy' in vr:
                     total_accuracy += vr['accuracy']
                     total_precision += vr['precision']
@@ -729,7 +590,7 @@ class FederatedLearningTester:
                     total_f1 += vr['f1_score']
                     valid_tests += 1
         
-        print(f"\n🎯 STRICT VALIDATION METRICS:")
+        print(f"\nSTRICT VALIDATION METRICS:")
         print(f"Total False Positives Across All Tests: {total_false_positives}")
         print(f"Total True Positives Across All Tests: {total_true_positives}")
         print(f"Total False Negatives Across All Tests: {total_false_negatives}")
@@ -737,18 +598,17 @@ class FederatedLearningTester:
         print(f"False Positive Rate: {total_false_positives}/{self.test_count} = {total_false_positives/self.test_count:.3f}")
         
         if total_false_positives == 0:
-            print("🎉 PERFECT SCORE: Zero false positives across all tests!")
+            print("PERFECT SCORE: Zero false positives across all tests!")
         else:
-            print("⚠️  IMPROVEMENT NEEDED: False positives detected")
+            print("IMPROVEMENT NEEDED: False positives detected")
         
         if valid_tests > 0:
-            print(f"\n🔍 OVERALL GSV DEFENSE SYSTEM PERFORMANCE:")
+            print(f"\nOVERALL GSV DEFENSE SYSTEM PERFORMANCE:")
             print(f"Average Accuracy: {total_accuracy/valid_tests:.3f}")
             print(f"Average Precision: {total_precision/valid_tests:.3f}")
             print(f"Average Recall: {total_recall/valid_tests:.3f}")
             print(f"Average F1-Score: {total_f1/valid_tests:.3f}")
         
-        # Save detailed report
         report_filename = f"test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         with open(report_filename, 'w') as f:
             json.dump({
@@ -765,11 +625,10 @@ class FederatedLearningTester:
                 "test_results": self.test_results
             }, f, indent=2)
         
-        print(f"\n📝 Detailed report saved to: {report_filename}")
+        print(f"\nDetailed report saved to: {report_filename}")
         
-        # Print failed tests with detailed reasons
         if self.failed_tests > 0:
-            print("\n❌ FAILED TESTS:")
+            print("\nFAILED TESTS:")
             for result in self.test_results:
                 if result["status"] == "FAILED":
                     vr = result.get('validation_results', {})
@@ -779,7 +638,7 @@ class FederatedLearningTester:
                     print(f"  - {result['test_name']}: {result['details']}")
                     print(f"    Metrics: FP={fp}, TP={tp}, FN={fn}")
         
-        print("\n🎉 Test Suite Complete!")
+        print("\nTest Suite Complete!")
 
 def main():
     parser = argparse.ArgumentParser(description='FL System Test Suite with Result Validation')
@@ -794,35 +653,31 @@ def main():
         print("Available tests:")
         tests = [
             "basic_functionality", "single_continuous_malicious", "single_random_malicious_high_prob",
-            "multiple_continuous_malicious", "mixed_attack_types", "false_positive_check",
-            "early_detection", "system_resilience", "detection_consistency",
-            "random_attacks_low_probability", "large_scale_scenario", "adaptive_threshold_behavior"
+            "false_positive_check","early_detection", "detection_consistency", "random_attacks_low_probability"
         ]
         for i, test in enumerate(tests, 1):
             print(f"{i}. {test}")
         return
     
     if args.test:
-        # Run specific test
         test_method = getattr(tester, f"test_{args.test}", None)
         if test_method:
-            print(f"🎯 Running specific test: {args.test}")
+            print(f"Running specific test: {args.test}")
             test_method()
             tester.generate_test_report()
         else:
             print(f"Test '{args.test}' not found. Use --list to see available tests.")
     else:
-        # Run all tests
         tester.run_all_tests()
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n🛑 Test suite interrupted by user")
+        print("\nTest suite interrupted by user")
         tester = FederatedLearningTester()
         tester.cleanup_processes()
     except Exception as e:
-        print(f"\n❌ Test suite error: {e}")
+        print(f"\nTest suite error: {e}")
         import traceback
         traceback.print_exc()

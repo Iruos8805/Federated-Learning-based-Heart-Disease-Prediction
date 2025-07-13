@@ -26,7 +26,6 @@ class Tee:
 sys.stdout = Tee(sys.stdout, log_file)
 sys.stderr = Tee(sys.stderr, log_file)
 
-# ----------------- Client --------------------
 
 class DelayedMaliciousClient(fl.client.NumPyClient):
     def __init__(self, X, y, become_malicious_after=5):
@@ -36,7 +35,6 @@ class DelayedMaliciousClient(fl.client.NumPyClient):
         self.become_malicious_after = become_malicious_after
         self.round_counter = 0
 
-        # Flip 100% of labels in y_malicious
         flip_fraction = 1.0
         flip_indices = np.random.choice(len(self.y_malicious), size=int(len(self.y_malicious) * flip_fraction), replace=False)
         self.y_malicious[flip_indices] = 1 - self.y_malicious[flip_indices]
@@ -48,7 +46,7 @@ class DelayedMaliciousClient(fl.client.NumPyClient):
         self.model.named_steps['rbfsampler'].fit(self.X)
         self.model.named_steps['sgdclassifier'].partial_fit(
             self.model.named_steps['rbfsampler'].transform(self.X),
-            self.y_clean,  # Start clean
+            self.y_clean,  
             classes=np.unique(self.y_clean)
         )
 
@@ -73,10 +71,10 @@ class DelayedMaliciousClient(fl.client.NumPyClient):
         X_transformed = self.model.named_steps['rbfsampler'].transform(self.X)
 
         if self.round_counter >= self.become_malicious_after:
-            print(f"🚨 Round {self.round_counter}: Acting MALICIOUS (flipped labels)")
+            print(f"Round {self.round_counter}: Acting MALICIOUS (flipped labels)")
             y_train = self.y_malicious
         else:
-            print(f"✅ Round {self.round_counter}: Acting NORMAL")
+            print(f"Round {self.round_counter}: Acting NORMAL")
             y_train = self.y_clean
 
         for epoch in range(5):
@@ -88,14 +86,13 @@ class DelayedMaliciousClient(fl.client.NumPyClient):
         self.set_parameters(parameters)
         preds = self.model.predict(self.X)
         recall = recall_score(self.y_clean, preds)
-        print(f"📊 Evaluate | Recall: {recall:.4f}")
+        print(f"Evaluate | Recall: {recall:.4f}")
         return 0.0, len(self.X), {"recall": recall}
 
 
-# ----------------- Main -----------------------
 
 if __name__ == "__main__":
-    print("🧠 Loading and preprocessing malicious client data...")
+    print("Loading and preprocessing malicious client data...")
 
     client_id = int(sys.argv[1]) if len(sys.argv) > 1 else np.random.randint(0, 1000)
     become_malicious_after = int(sys.argv[2]) if len(sys.argv) > 2 else 5

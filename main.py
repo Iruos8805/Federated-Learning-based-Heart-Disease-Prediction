@@ -11,7 +11,6 @@ import sys
 import os
 from datetime import datetime
 
-#---------------------------------------------------------------    
 os.makedirs("logs", exist_ok=True)
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_file = open(f"logs/run_{timestamp}.txt", "w")
@@ -32,7 +31,6 @@ class Tee:
 sys.stdout = Tee(sys.stdout, log_file)
 sys.stderr = Tee(sys.stderr, log_file)
 
-#--------------------------------------------------------------
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -1,6 +1,5 @@
 """
 Federated Learning Server with Gradient Signature Verification (GSV)
-Author: [Your Name]
 Description: Main server implementation with GSV defense against adversarial attacks
 """
 
@@ -10,8 +9,6 @@ import sys
 from datetime import datetime
 from mitigation import GSVStrategy, load_validation_data
 
-#---------------------------------------------------------------
-# Logging setup
 os.makedirs("logs", exist_ok=True)
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_file = open(f"logs/fl_server_gsv_{timestamp}.txt", "w")
@@ -30,10 +27,8 @@ class Tee:
         for s in self.streams:
             s.flush()
 
-# Redirect stdout and stderr
 sys.stdout = Tee(sys.stdout, log_file)
 sys.stderr = Tee(sys.stderr, log_file)
-#---------------------------------------------------------------
 
 
 def weighted_average(metrics):
@@ -58,20 +53,18 @@ def start_server():
     Start the federated learning server with GSV defense system
     """
     print("-" * 60)
-    print("🚀 Starting Federated Learning Server with GSV Defense")
+    print("Starting Federated Learning Server with GSV Defense")
     print("-" * 60)
 
-    # Load validation data (kept for compatibility, not used in GSV)
-    print("🔧 Initializing Gradient Signature Verifier...")
+    print("Initializing Gradient Signature Verifier...")
     try:
         validation_data = load_validation_data()
-        print("✅ Validation data loaded successfully")
+        print("Validation data loaded successfully")
     except Exception as e:
-        print(f"❌ Error loading validation data: {e}")
-        print("⚠️  Proceeding without validation data (GSV doesn't require it)")
+        print(f"Error loading validation data: {e}")
+        print("Proceeding without validation data (GSV doesn't require it)")
         validation_data = None
 
-    # Create GSV strategy
     try:
         strategy = GSVStrategy(
             min_fit_clients=3,
@@ -81,14 +74,14 @@ def start_server():
             fraction_evaluate=1.0,
             evaluate_metrics_aggregation_fn=weighted_average,
         )
-        print("✅ GSV strategy initialized successfully")
+        print("GSV strategy initialized successfully")
     except Exception as e:
-        print(f"❌ Error creating GSV strategy: {e}")
+        print(f"Error creating GSV strategy: {e}")
         raise
 
-    print("🔍 Gradient Signature Verification (GSV) activated")
-    print("🛡️  Defense system ready for adversarial attack detection")
-    print("🧬 GSV Features:")
+    print("Gradient Signature Verification (GSV) activated")
+    print("Defense system ready for adversarial attack detection")
+    print("GSV Features:")
     print("   - Gradient magnitude distribution analysis")
     print("   - Sign pattern behavioral fingerprinting")
     print("   - Client-specific profile evolution")
@@ -103,17 +96,17 @@ def start_server():
             strategy=strategy
         )
     except Exception as e:
-        print(f"❌ Error starting server: {e}")
+        print(f"Error starting server: {e}")
         raise
 
     print("\n" + "=" * 60)
-    print("🔍 Final GSV System Status:")
+    print("Final GSV System Status:")
     try:
         gsv_status = strategy.get_verification_status()
         for key, value in gsv_status.items():
             print(f"   {key}: {value}")
     except Exception as e:
-        print(f"❌ Error getting GSV status: {e}")
+        print(f"Error getting GSV status: {e}")
     print("=" * 60)
 
 
@@ -121,9 +114,9 @@ if __name__ == '__main__':
     try:
         start_server()
     except KeyboardInterrupt:
-        print("\n🛑 Server shutdown requested by user")
+        print("\nServer shutdown requested by user")
     except Exception as e:
-        print(f"\n❌ Server error: {e}")
+        print(f"\nServer error: {e}")
         import traceback
         traceback.print_exc()
     finally:
@@ -131,4 +124,4 @@ if __name__ == '__main__':
         sys.stderr = sys.__stderr__
         if 'log_file' in locals():
             log_file.close()
-        print("📝 Logs saved to logs/ directory")
+        print("Logs saved to logs/ directory")

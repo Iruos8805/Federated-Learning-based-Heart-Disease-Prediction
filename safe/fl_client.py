@@ -8,13 +8,12 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from dataset import load_dataset
 from preprocessing import basic_cleaning
 from modifications import remove_outliers, feature_engineering, scale_features, select_features
-from client_augment import augment_client_data  # ✅ NEW IMPORT
+from client_augment import augment_client_data  
 
 import os
 import sys
 from datetime import datetime
 
-#---------------------------------------------------------------
 os.makedirs("logs", exist_ok=True)
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_file = open(f"logs/fl_client_{timestamp}.txt", "w")
@@ -34,7 +33,6 @@ class Tee:
 
 sys.stdout = Tee(sys.stdout, log_file)
 sys.stderr = Tee(sys.stderr, log_file)
-#---------------------------------------------------------------
 
 class HeartClient(fl.client.NumPyClient):
     def __init__(self, X, y):
@@ -44,9 +42,7 @@ class HeartClient(fl.client.NumPyClient):
             RBFSampler(gamma=0.028092305159489246, n_components=1288, random_state=42),
             SGDClassifier(loss='hinge', alpha=1.0 / 400.7935817191417, max_iter=1000, random_state=42)
         )
-        # Fit the RBF sampler once with the data
         self.model.named_steps['rbfsampler'].fit(self.X)
-        # Initialize the classifier with a dummy fit to create the necessary parameters
         self.model.named_steps['sgdclassifier'].partial_fit(
             self.model.named_steps['rbfsampler'].transform(self.X), 
             self.y, 
@@ -58,7 +54,6 @@ class HeartClient(fl.client.NumPyClient):
         clf = self.model.named_steps['sgdclassifier']
         params = []
         
-        # Get the main parameters that need to be averaged
         if hasattr(clf, 'coef_') and clf.coef_ is not None:
             params.append(clf.coef_.flatten())
         if hasattr(clf, 'intercept_') and clf.intercept_ is not None:
@@ -73,11 +68,9 @@ class HeartClient(fl.client.NumPyClient):
             
         clf = self.model.named_steps['sgdclassifier']
         
-        # Set coefficients
         if len(parameters) >= 1 and hasattr(clf, 'coef_'):
             clf.coef_ = parameters[0].reshape(clf.coef_.shape)
         
-        # Set intercept
         if len(parameters) >= 2 and hasattr(clf, 'intercept_'):
             clf.intercept_ = parameters[1].reshape(clf.intercept_.shape)
 
@@ -85,17 +78,13 @@ class HeartClient(fl.client.NumPyClient):
         print("-" * 60)
         print("Fitting model on client data...")
         
-        # Set parameters from server
         self.set_parameters(parameters)
         
-        # Transform data using RBF sampler
         X_transformed = self.model.named_steps['rbfsampler'].transform(self.X)
         
-        # Train for multiple local epochs
         local_epochs = 5
         for epoch in range(local_epochs):
             print(f"Epoch {epoch + 1}/{local_epochs}")
-            # Use partial_fit to maintain the existing model state
             self.model.named_steps['sgdclassifier'].partial_fit(X_transformed, self.y)
 
         return self.get_parameters(), len(self.X), {}
@@ -104,10 +93,8 @@ class HeartClient(fl.client.NumPyClient):
         print("-" * 60)
         print("Evaluating model on client data...")
         
-        # Set parameters from server
         self.set_parameters(parameters)
         
-        # Make predictions
         preds = self.model.predict(self.X)
         score = recall_score(self.y, preds)
         
@@ -122,7 +109,6 @@ if __name__ == "__main__":
     print("-" * 60)
     print("Loading and preprocessing client data...")
 
-    # Get client ID and malicious flag from command line
     client_id = int(sys.argv[1]) if len(sys.argv) > 1 else np.random.randint(0, 1000)
     is_malicious = len(sys.argv) > 2 and sys.argv[2].lower() in ["mal", "malicious", "--mal"]   
 
@@ -135,7 +121,6 @@ if __name__ == "__main__":
     X = scale_features(X)
     X = select_features(X, y)
     
-    # Stratified split to preserve class balance per client - different seed per client
     splitter = StratifiedShuffleSplit(n_splits=1, test_size=0.8, random_state=client_id)
     for train_idx, _ in splitter.split(X, y):
         X_part = X.iloc[train_idx].values
@@ -143,23 +128,22 @@ if __name__ == "__main__":
 
     print(f"Client ID: {client_id}")
     print(f"Random seed used: {client_id}")
-    print(f"Malicious client? {'✅ YES' if is_malicious else '❌ NO'}")
+    print(f"Malicious client? {'YES' if is_malicious else 'NO'}")
     print("Class distribution in this client:")
     print(np.bincount(y_part))
     print("Data shape before augmentation:", X_part.shape)
     print("-" * 60)
 
     if is_malicious:
-        print("⚠️  Malicious behavior: Partially flipping labels")
-        flip_fraction = 1.0  # Flip 30% of labels
+        print("Malicious behavior: Partially flipping labels")
+        flip_fraction = 1.0  
         flip_indices = np.random.choice(len(y_part), size=int(len(y_part) * flip_fraction), replace=False)
         y_part[flip_indices] = 1 - y_part[flip_indices]
 
 
-    # ✅ Augment the client data before training
     X_aug, y_aug = augment_client_data(X_part, y_part, target_size=2000, method="combined")
 
-    print("✅ Client data augmented")
+    print("Client data augmented")
     print("New shape:", X_aug.shape)
     print("New class distribution:", np.bincount(y_aug))
     print("-" * 60)
@@ -171,5 +155,5 @@ if __name__ == "__main__":
 
     fl.client.start_client(
         server_address="localhost:8080",
-        client=client.to_client()  # Convert NumPyClient to standard Client
+        client=client.to_client()  
     )

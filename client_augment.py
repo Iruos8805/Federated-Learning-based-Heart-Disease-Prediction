@@ -38,7 +38,7 @@ class ClientDataAugmenter:
             X_resampled, y_resampled = smote.fit_resample(X, y)
             return X_resampled, y_resampled
         except Exception as e:
-            print(f"⚠️ SMOTE failed: {e}")
+            print(f"SMOTE failed: {e}")
             return X, y
 
     def augment_with_noise(self, X, y, noise_factor=0.05, multiplier=2):
@@ -121,7 +121,6 @@ def augment_client_data(X, y, target_size=2000, method="combined"):
         return augmenter.augment_with_interpolation(X_aug, y_aug, target_size - len(X))
 
     elif method == "light":
-        # Light augment: minimal noise + interpolation
         stage1_target = int(target_size * 0.6)
         X_aug, y_aug = augmenter.augment_with_smote(X_aug, y_aug, stage1_target)
 
@@ -138,7 +137,6 @@ def augment_client_data(X, y, target_size=2000, method="combined"):
         return X_aug, y_aug
 
     elif method in ["strong", "combined"]:
-        # Full combo (strong)
         stage1_target = int(target_size * 0.6)
         X_aug, y_aug = augmenter.augment_with_smote(X_aug, y_aug, stage1_target)
 

@@ -25,7 +25,6 @@ def run_optuna(X_train, y_train, save_path='config/best_params.json'):
 
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
 
-    # Append instead of overwrite
     with open(save_path, 'a') as f:
         json.dump({"params": best_params, "recall": best_score}, f)
         f.write("\n")

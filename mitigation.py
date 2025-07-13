@@ -18,7 +18,7 @@ class GradientSignatureVerifier:
         self.signature_window = signature_window
         self.anomaly_threshold = anomaly_threshold
         self.profile_decay = profile_decay
-        self.warmup_rounds = warmup_rounds  # ✅ Make warmup configurable
+        self.warmup_rounds = warmup_rounds  
 
         self.client_profiles = {}
         self.round_count = 0
@@ -28,10 +28,9 @@ class GradientSignatureVerifier:
         self.total_clients_processed = 0
         self.total_updates_filtered = 0
         
-        # ✅ NEW: Track blocked clients and their detection history
         self.blocked_clients = set()
-        self.detection_history = {}  # client_id -> list of detection rounds
-        self.client_round_mapping = {}  # Maps client proxy to consistent client_id
+        self.detection_history = {}  
+        self.client_round_mapping = {}  
 
         self.score_log_path = "logs/client_scores.csv"
         with open(self.score_log_path, "w") as f:
@@ -144,11 +143,9 @@ class GradientSignatureVerifier:
 
     def _get_client_id(self, client_proxy, fit_res):
         """Get client ID from fit results or fallback to proxy-based ID"""
-        # Try to get client ID from fit results first
         if hasattr(fit_res, 'metrics') and fit_res.metrics and 'client_id' in fit_res.metrics:
             return fit_res.metrics['client_id']
         
-        # Fallback to proxy-based ID assignment
         client_key = str(client_proxy)
         if client_key not in self.client_round_mapping:
             client_id = f"client_{len(self.client_round_mapping)}"
@@ -193,12 +190,10 @@ class GradientSignatureVerifier:
             elif score > self.adaptive_threshold + confidence_margin:
                 print(f"\U0001F6A8 Client {client_id}: MALICIOUS DETECTED (score: {score:.4f})")
                 
-                # ✅ Track detection history
                 if client_id not in self.detection_history:
                     self.detection_history[client_id] = []
                 self.detection_history[client_id].append(self.round_count)
                 
-                # ✅ Block client after 2 consecutive detections
                 if len(self.detection_history[client_id]) >= 2:
                     self.blocked_clients.add(client_id)
                     is_blocked = True
@@ -212,11 +207,9 @@ class GradientSignatureVerifier:
                 self.update_client_profile(client_id, signature)
                 filtered_updates.append((client_proxy, fit_res))
                 
-                # ✅ Reset detection history on good behavior
                 if client_id in self.detection_history:
                     self.detection_history[client_id] = []
 
-            # ✅ Log detailed information
             with open(self.score_log_path, "a") as f:
                 f.write(f"{self.round_count},{client_id},{score:.4f},{int(is_filtered)},{int(is_blocked)}\n")
 
