@@ -1,0 +1,76 @@
+🔧 Server starting with 3 clients for 8 rounds (5 warmup)
+Usage: python fl_server_mit.py --num_clients 5 --num_rounds 25 --warmup 10
+   or: python fl_server_mit.py -n 5 -r 25 --warmup 10
+------------------------------------------------------------
+------------------------------------------------------------
+🚀 Starting Federated Learning Server with GSV Defense
+📊 Configuration: 3 clients, 8 rounds, 5 warmup
+------------------------------------------------------------
+🔧 Initializing Gradient Signature Verifier...
+📊 Loading validation data...
+Loaded dataset from: ./heart.csv
+------------------------------------------------------------
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 918 entries, 0 to 917
+Data columns (total 12 columns):
+ #   Column          Non-Null Count  Dtype  
+---  ------          --------------  -----  
+ 0   Age             918 non-null    int64  
+ 1   Sex             918 non-null    object 
+ 2   ChestPainType   918 non-null    object 
+ 3   RestingBP       918 non-null    int64  
+ 4   Cholesterol     918 non-null    int64  
+ 5   FastingBS       918 non-null    int64  
+ 6   RestingECG      918 non-null    object 
+ 7   MaxHR           918 non-null    int64  
+ 8   ExerciseAngina  918 non-null    object 
+ 9   Oldpeak         918 non-null    float64
+ 10  ST_Slope        918 non-null    object 
+ 11  HeartDisease    918 non-null    int64  
+dtypes: float64(1), int64(6), object(5)
+memory usage: 86.2+ KB
+None
+Missing values:
+ Age               0
+Sex               0
+ChestPainType     0
+RestingBP         0
+Cholesterol       0
+FastingBS         0
+RestingECG        0
+MaxHR             0
+ExerciseAngina    0
+Oldpeak           0
+ST_Slope          0
+HeartDisease      0
+dtype: int64
+Has Duplicates: False
+------------------------------------------------------------
+Saved boxplot to ./EDA/boxplot.png
+------------------------------------------------------------
+Removed 216 outlier rows
+------------------------------------------------------------
+Performed feature engineering
+------------------------------------------------------------
+Scaled numerical features
+------------------------------------------------------------
+Selected 23 features: ['Age', 'RestingBP', 'Cholesterol', 'FastingBS', 'MaxHR', 'Oldpeak', 'Sex_F', 'Sex_M', 'ChestPainType_ASY', 'ChestPainType_ATA', 'ChestPainType_NAP', 'ChestPainType_TA', 'RestingECG_LVH', 'RestingECG_Normal', 'RestingECG_ST', 'ExerciseAngina_N', 'ExerciseAngina_Y', 'ST_Slope_Down', 'ST_Slope_Flat', 'ST_Slope_Up', 'AgeGroup_Middle-aged', 'AgeGroup_Senior', 'AgeGroup_Very old']
+------------------------------------------------------------
+✅ Validation set: 211 samples
+✅ Validation data loaded successfully
+🔍 GSV initialized | window: 10 | threshold: 1.8
+✅ GSV strategy initialized successfully
+   • Minimum clients required: 3
+   • Training rounds: 8
+   • Warmup rounds: 5
+🔍 Gradient Signature Verification (GSV) activated
+🛡️  Defense system ready for adversarial attack detection
+🧬 GSV Features:
+   - Gradient magnitude distribution analysis
+   - Sign pattern behavioral fingerprinting
+   - Client-specific profile evolution
+   - Adaptive threshold adjustment
+   - Multi-metric anomaly detection
+   - Individual client filtering (not all clients)
+   - Persistent client blocking after detection
+------------------------------------------------------------

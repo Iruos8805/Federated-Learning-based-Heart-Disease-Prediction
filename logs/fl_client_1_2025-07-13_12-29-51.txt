@@ -1,0 +1,558 @@
+------------------------------------------------------------
+Loading and preprocessing client data...
+Loaded dataset from: ./heart.csv
+------------------------------------------------------------
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 918 entries, 0 to 917
+Data columns (total 12 columns):
+ #   Column          Non-Null Count  Dtype  
+---  ------          --------------  -----  
+ 0   Age             918 non-null    int64  
+ 1   Sex             918 non-null    object 
+ 2   ChestPainType   918 non-null    object 
+ 3   RestingBP       918 non-null    int64  
+ 4   Cholesterol     918 non-null    int64  
+ 5   FastingBS       918 non-null    int64  
+ 6   RestingECG      918 non-null    object 
+ 7   MaxHR           918 non-null    int64  
+ 8   ExerciseAngina  918 non-null    object 
+ 9   Oldpeak         918 non-null    float64
+ 10  ST_Slope        918 non-null    object 
+ 11  HeartDisease    918 non-null    int64  
+dtypes: float64(1), int64(6), object(5)
+memory usage: 86.2+ KB
+None
+Missing values:
+ Age               0
+Sex               0
+ChestPainType     0
+RestingBP         0
+Cholesterol       0
+FastingBS         0
+RestingECG        0
+MaxHR             0
+ExerciseAngina    0
+Oldpeak           0
+ST_Slope          0
+HeartDisease      0
+dtype: int64
+Has Duplicates: False
+------------------------------------------------------------
+Saved boxplot to ./EDA/boxplot.png
+------------------------------------------------------------
+Removed 216 outlier rows
+------------------------------------------------------------
+Performed feature engineering
+------------------------------------------------------------
+Scaled numerical features
+------------------------------------------------------------
+Selected 23 features: ['Age', 'RestingBP', 'Cholesterol', 'FastingBS', 'MaxHR', 'Oldpeak', 'Sex_F', 'Sex_M', 'ChestPainType_ASY', 'ChestPainType_ATA', 'ChestPainType_NAP', 'ChestPainType_TA', 'RestingECG_LVH', 'RestingECG_Normal', 'RestingECG_ST', 'ExerciseAngina_N', 'ExerciseAngina_Y', 'ST_Slope_Down', 'ST_Slope_Flat', 'ST_Slope_Up', 'AgeGroup_Middle-aged', 'AgeGroup_Senior', 'AgeGroup_Very old']
+------------------------------------------------------------
+Client ID: 1
+Random seed used: 1
+Malicious client? ❌ NO
+Class distribution in this client:
+[75 65]
+Data shape before augmentation: (140, 23)
+------------------------------------------------------------
+✅ Client data augmented
+New shape: (2000, 23)
+New class distribution: [ 999 1001]
+------------------------------------------------------------
+Starting Federated Learning Client 1...
+Usage examples:
+  python fl_client.py 1 --malicious --random --warmup 10
+  python fl_client.py 2 --mal --rand --attack_probability 0.5
+  python fl_client.py 3 --malicious --warmup 20
+------------------------------------------------------------
+------------------------------------------------------------
+Round 0: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 0
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8941058941058941
+Predictions distribution: [1021  979]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 1: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 1
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8981018981018981
+Predictions distribution: [1017  983]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 2: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 2
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8991008991008991
+Predictions distribution: [1014  986]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 3: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 3
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.9000999000999002
+Predictions distribution: [1013  987]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 4: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 4
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8991008991008991
+Predictions distribution: [1014  986]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 5: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 5
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8991008991008991
+Predictions distribution: [1014  986]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 6: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 6
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8991008991008991
+Predictions distribution: [1014  986]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 7: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 7
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8991008991008991
+Predictions distribution: [1012  988]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 8: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 8
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8981018981018981
+Predictions distribution: [1013  987]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 9: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 9
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8981018981018981
+Predictions distribution: [1012  988]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 10: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 10
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8981018981018981
+Predictions distribution: [1012  988]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 11: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 11
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.9230769230769231
+Predictions distribution: [ 975 1025]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 12: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 12
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.922077922077922
+Predictions distribution: [ 957 1043]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 13: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 13
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.919080919080919
+Predictions distribution: [ 959 1041]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 14: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 14
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.9090909090909091
+Predictions distribution: [ 984 1016]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 15: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 15
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.9010989010989011
+Predictions distribution: [ 997 1003]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 16: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 16
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8951048951048951
+Predictions distribution: [1006  994]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 17: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 17
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.8171828171828172
+Predictions distribution: [ 975 1025]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 18: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 18
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.21478521478521478
+Predictions distribution: [ 921 1079]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 19: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 19
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.16183816183816183
+Predictions distribution: [ 900 1100]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 20: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 20
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.13786213786213786
+Predictions distribution: [ 927 1073]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 21: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 21
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.13586413586413587
+Predictions distribution: [ 942 1058]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 22: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 22
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.13186813186813187
+Predictions distribution: [ 954 1046]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 23: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 23
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.13086913086913088
+Predictions distribution: [ 955 1045]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 24: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 24
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.12987012987012986
+Predictions distribution: [ 953 1047]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 25: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 25
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.12887112887112886
+Predictions distribution: [ 956 1044]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 26: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 26
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.12887112887112886
+Predictions distribution: [ 960 1040]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 27: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 27
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.12687312687312688
+Predictions distribution: [ 965 1035]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 28: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 28
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.12487512487512488
+Predictions distribution: [ 969 1031]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 29: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 29
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.12487512487512488
+Predictions distribution: [ 974 1026]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 30: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 30
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.12387612387612387
+Predictions distribution: [ 976 1024]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 31: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 31
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.12387612387612387
+Predictions distribution: [ 976 1024]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 32: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 32
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.12387612387612387
+Predictions distribution: [ 977 1023]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 33: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 33
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.12087912087912088
+Predictions distribution: [ 980 1020]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+------------------------------------------------------------
+Round 34: Fitting model on client 1
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 1: Training completed for round 34
+------------------------------------------------------------
+Evaluating model on client 1 data...
+Client 1 Recall Score: 0.11988011988011989
+Predictions distribution: [ 982 1018]
+True labels distribution: [ 999 1001]
+------------------------------------------------------------
+📝 Client 1 logs saved to logs/ directory

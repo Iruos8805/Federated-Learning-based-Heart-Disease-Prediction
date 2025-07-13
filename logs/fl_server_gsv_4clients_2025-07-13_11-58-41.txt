@@ -1,0 +1,307 @@
+🔧 Server starting with 4 clients for 12 rounds (5 warmup)
+Usage: python fl_server_mit.py --num_clients 5 --num_rounds 25 --warmup 10
+   or: python fl_server_mit.py -n 5 -r 25 --warmup 10
+------------------------------------------------------------
+------------------------------------------------------------
+🚀 Starting Federated Learning Server with GSV Defense
+📊 Configuration: 4 clients, 12 rounds, 5 warmup
+------------------------------------------------------------
+🔧 Initializing Gradient Signature Verifier...
+📊 Loading validation data...
+Loaded dataset from: ./heart.csv
+------------------------------------------------------------
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 918 entries, 0 to 917
+Data columns (total 12 columns):
+ #   Column          Non-Null Count  Dtype  
+---  ------          --------------  -----  
+ 0   Age             918 non-null    int64  
+ 1   Sex             918 non-null    object 
+ 2   ChestPainType   918 non-null    object 
+ 3   RestingBP       918 non-null    int64  
+ 4   Cholesterol     918 non-null    int64  
+ 5   FastingBS       918 non-null    int64  
+ 6   RestingECG      918 non-null    object 
+ 7   MaxHR           918 non-null    int64  
+ 8   ExerciseAngina  918 non-null    object 
+ 9   Oldpeak         918 non-null    float64
+ 10  ST_Slope        918 non-null    object 
+ 11  HeartDisease    918 non-null    int64  
+dtypes: float64(1), int64(6), object(5)
+memory usage: 86.2+ KB
+None
+Missing values:
+ Age               0
+Sex               0
+ChestPainType     0
+RestingBP         0
+Cholesterol       0
+FastingBS         0
+RestingECG        0
+MaxHR             0
+ExerciseAngina    0
+Oldpeak           0
+ST_Slope          0
+HeartDisease      0
+dtype: int64
+Has Duplicates: False
+------------------------------------------------------------
+Saved boxplot to ./EDA/boxplot.png
+------------------------------------------------------------
+Removed 216 outlier rows
+------------------------------------------------------------
+Performed feature engineering
+------------------------------------------------------------
+Scaled numerical features
+------------------------------------------------------------
+Selected 23 features: ['Age', 'RestingBP', 'Cholesterol', 'FastingBS', 'MaxHR', 'Oldpeak', 'Sex_F', 'Sex_M', 'ChestPainType_ASY', 'ChestPainType_ATA', 'ChestPainType_NAP', 'ChestPainType_TA', 'RestingECG_LVH', 'RestingECG_Normal', 'RestingECG_ST', 'ExerciseAngina_N', 'ExerciseAngina_Y', 'ST_Slope_Down', 'ST_Slope_Flat', 'ST_Slope_Up', 'AgeGroup_Middle-aged', 'AgeGroup_Senior', 'AgeGroup_Very old']
+------------------------------------------------------------
+✅ Validation set: 211 samples
+✅ Validation data loaded successfully
+🔍 GSV initialized | window: 10 | threshold: 1.8
+✅ GSV strategy initialized successfully
+   • Minimum clients required: 4
+   • Training rounds: 12
+   • Warmup rounds: 5
+🔍 Gradient Signature Verification (GSV) activated
+🛡️  Defense system ready for adversarial attack detection
+🧬 GSV Features:
+   - Gradient magnitude distribution analysis
+   - Sign pattern behavioral fingerprinting
+   - Client-specific profile evolution
+   - Adaptive threshold adjustment
+   - Multi-metric anomaly detection
+   - Individual client filtering (not all clients)
+   - Persistent client blocking after detection
+------------------------------------------------------------
+
+🔍 Round 1: GSV Aggregation
+============================================================
+
+🔍 Round 0: GSV Verification
+=======================================================
+🔁 Client 3: Warming up (score: 0.0000) [Round 0/5]
+🔁 Client 4: Warming up (score: 0.0000) [Round 0/5]
+🔁 Client 2: Warming up (score: 0.0000) [Round 0/5]
+🔁 Client 1: Warming up (score: 0.0000) [Round 0/5]
+📊 Acceptance: 4/4 (100.00%)
+🎯 Threshold: 1.8000
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9199
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.9193548387096774, 0.9272183449651047, 0.926073926073926, 0.9070929070929071]
+===================================
+
+🔍 Round 2: GSV Aggregation
+============================================================
+
+🔍 Round 1: GSV Verification
+=======================================================
+🔁 Client 1: Warming up (score: 0.0000) [Round 1/5]
+🔁 Client 4: Warming up (score: 0.0000) [Round 1/5]
+🔁 Client 3: Warming up (score: 0.0000) [Round 1/5]
+🔁 Client 2: Warming up (score: 0.0000) [Round 1/5]
+📊 Acceptance: 4/4 (100.00%)
+🎯 Threshold: 1.8000
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9242
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.936063936063936, 0.9223790322580645, 0.9110889110889111, 0.9272183449651047]
+===================================
+
+🔍 Round 3: GSV Aggregation
+============================================================
+
+🔍 Round 2: GSV Verification
+=======================================================
+🔁 Client 3: Warming up (score: 3.5016) [Round 2/5]
+🔁 Client 2: Warming up (score: 3.5004) [Round 2/5]
+🔁 Client 4: Warming up (score: 3.5000) [Round 2/5]
+🔁 Client 1: Warming up (score: 3.5008) [Round 2/5]
+📊 Acceptance: 4/4 (100.00%)
+🎯 Threshold: 1.7910
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9264
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.9243951612903226, 0.942057942057942, 0.9120879120879121, 0.9272183449651047]
+===================================
+
+🔍 Round 4: GSV Aggregation
+============================================================
+
+🔍 Round 3: GSV Verification
+=======================================================
+🔁 Client 4: Warming up (score: 3.5000) [Round 3/5]
+🔁 Client 3: Warming up (score: 2.1260) [Round 3/5]
+🔁 Client 1: Warming up (score: 3.5011) [Round 3/5]
+🔁 Client 2: Warming up (score: 1.1812) [Round 3/5]
+📊 Acceptance: 4/4 (100.00%)
+🎯 Threshold: 1.7910
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9272
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.9254032258064516, 0.9430569430569431, 0.913086913086913, 0.9272183449651047]
+===================================
+
+🔍 Round 5: GSV Aggregation
+============================================================
+
+🔍 Round 4: GSV Verification
+=======================================================
+🔁 Client 1: Warming up (score: 1.1306) [Round 4/5]
+🔁 Client 2: Warming up (score: 1.4082) [Round 4/5]
+🔁 Client 4: Warming up (score: 1.0856) [Round 4/5]
+🔁 Client 3: Warming up (score: 2.1052) [Round 4/5]
+📊 Acceptance: 4/4 (100.00%)
+🎯 Threshold: 1.7820
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9277
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.9440559440559441, 0.9264112903225806, 0.913086913086913, 0.9272183449651047]
+===================================
+
+🔍 Round 6: GSV Aggregation
+============================================================
+
+🔍 Round 5: GSV Verification
+=======================================================
+✅ Client 4: Accepted (score: 0.6384)
+🚨 Client 2: MALICIOUS DETECTED (score: 3.5080)
+🚨 Client 3: MALICIOUS DETECTED (score: 3.5210)
+✅ Client 1: Accepted (score: 0.6880)
+📊 Acceptance: 2/4 (50.00%)
+🎯 Threshold: 1.7731
+🚫 Blocked clients: 0
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9357
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.9530469530469531, 0.938508064516129, 0.9180819180819181, 0.9332003988035892]
+===================================
+
+🔍 Round 7: GSV Aggregation
+============================================================
+
+🔍 Round 6: GSV Verification
+=======================================================
+🚨 Client 2: MALICIOUS DETECTED (score: 3.5085)
+🚫 Client 2: PERMANENTLY BLOCKED
+🚨 Client 3: MALICIOUS DETECTED (score: 3.5205)
+🚫 Client 3: PERMANENTLY BLOCKED
+✅ Client 4: Accepted (score: 1.9395)
+🚨 Client 1: MALICIOUS DETECTED (score: 3.5002)
+📊 Acceptance: 1/4 (25.00%)
+🎯 Threshold: 1.7731
+🚫 Blocked clients: 2
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9467
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.9391824526420738, 0.9556451612903226, 0.9280719280719281, 0.964035964035964]
+===================================
+
+🔍 Round 8: GSV Aggregation
+============================================================
+
+🔍 Round 7: GSV Verification
+=======================================================
+🚫 Client 3: BLOCKED (previously detected)
+🚨 Client 1: MALICIOUS DETECTED (score: 3.5004)
+🚫 Client 1: PERMANENTLY BLOCKED
+🚫 Client 2: BLOCKED (previously detected)
+✅ Client 4: Accepted (score: 0.4056)
+📊 Acceptance: 1/4 (25.00%)
+🎯 Threshold: 1.7731
+🚫 Blocked clients: 3
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9460
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.938185443668993, 0.9280719280719281, 0.9556451612903226, 0.962037962037962]
+===================================
+
+🔍 Round 9: GSV Aggregation
+============================================================
+
+🔍 Round 8: GSV Verification
+=======================================================
+🚫 Client 2: BLOCKED (previously detected)
+🚫 Client 3: BLOCKED (previously detected)
+✅ Client 4: Accepted (score: 0.9154)
+🚫 Client 1: BLOCKED (previously detected)
+📊 Acceptance: 1/4 (25.00%)
+🎯 Threshold: 1.7731
+🚫 Blocked clients: 3
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9447
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.9546370967741935, 0.9590409590409591, 0.9280719280719281, 0.9371884346959123]
+===================================
+
+🔍 Round 10: GSV Aggregation
+============================================================
+
+🔍 Round 9: GSV Verification
+=======================================================
+🚫 Client 2: BLOCKED (previously detected)
+🚫 Client 3: BLOCKED (previously detected)
+🚫 Client 1: BLOCKED (previously detected)
+✅ Client 4: Accepted (score: 0.6198)
+📊 Acceptance: 1/4 (25.00%)
+🎯 Threshold: 1.7731
+🚫 Blocked clients: 3
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9450
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.9280719280719281, 0.9371884346959123, 0.9546370967741935, 0.9600399600399601]
+===================================
+
+🔍 Round 11: GSV Aggregation
+============================================================
+
+🔍 Round 10: GSV Verification
+=======================================================
+🚫 Client 2: BLOCKED (previously detected)
+✅ Client 4: Accepted (score: 0.6833)
+🚫 Client 3: BLOCKED (previously detected)
+🚫 Client 1: BLOCKED (previously detected)
+📊 Acceptance: 1/4 (25.00%)
+🎯 Threshold: 1.7731
+🚫 Blocked clients: 3
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9450
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.9546370967741935, 0.929070929070929, 0.9590409590409591, 0.9371884346959123]
+===================================
+
+🔍 Round 12: GSV Aggregation
+============================================================
+
+🔍 Round 11: GSV Verification
+=======================================================
+🚫 Client 1: BLOCKED (previously detected)
+🚫 Client 3: BLOCKED (previously detected)
+✅ Client 4: Accepted (score: 0.7663)
+🚫 Client 2: BLOCKED (previously detected)
+📊 Acceptance: 1/4 (25.00%)
+🎯 Threshold: 1.7731
+🚫 Blocked clients: 3
+=== GLOBAL MODEL PERFORMANCE ===
+Aggregated Recall Score: 0.9440
+Total Examples: 8000
+Participating Clients: 4
+Individual Client Recalls: [0.9546370967741935, 0.9371884346959123, 0.9560439560439561, 0.9280719280719281]
+===================================

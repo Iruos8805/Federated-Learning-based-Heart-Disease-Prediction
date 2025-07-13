@@ -1,0 +1,588 @@
+------------------------------------------------------------
+Loading and preprocessing client data...
+Loaded dataset from: ./heart.csv
+------------------------------------------------------------
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 918 entries, 0 to 917
+Data columns (total 12 columns):
+ #   Column          Non-Null Count  Dtype  
+---  ------          --------------  -----  
+ 0   Age             918 non-null    int64  
+ 1   Sex             918 non-null    object 
+ 2   ChestPainType   918 non-null    object 
+ 3   RestingBP       918 non-null    int64  
+ 4   Cholesterol     918 non-null    int64  
+ 5   FastingBS       918 non-null    int64  
+ 6   RestingECG      918 non-null    object 
+ 7   MaxHR           918 non-null    int64  
+ 8   ExerciseAngina  918 non-null    object 
+ 9   Oldpeak         918 non-null    float64
+ 10  ST_Slope        918 non-null    object 
+ 11  HeartDisease    918 non-null    int64  
+dtypes: float64(1), int64(6), object(5)
+memory usage: 86.2+ KB
+None
+Missing values:
+ Age               0
+Sex               0
+ChestPainType     0
+RestingBP         0
+Cholesterol       0
+FastingBS         0
+RestingECG        0
+MaxHR             0
+ExerciseAngina    0
+Oldpeak           0
+ST_Slope          0
+HeartDisease      0
+dtype: int64
+Has Duplicates: False
+------------------------------------------------------------
+Saved boxplot to ./EDA/boxplot.png
+------------------------------------------------------------
+Removed 216 outlier rows
+------------------------------------------------------------
+Performed feature engineering
+------------------------------------------------------------
+Scaled numerical features
+------------------------------------------------------------
+Selected 23 features: ['Age', 'RestingBP', 'Cholesterol', 'FastingBS', 'MaxHR', 'Oldpeak', 'Sex_F', 'Sex_M', 'ChestPainType_ASY', 'ChestPainType_ATA', 'ChestPainType_NAP', 'ChestPainType_TA', 'RestingECG_LVH', 'RestingECG_Normal', 'RestingECG_ST', 'ExerciseAngina_N', 'ExerciseAngina_Y', 'ST_Slope_Down', 'ST_Slope_Flat', 'ST_Slope_Up', 'AgeGroup_Middle-aged', 'AgeGroup_Senior', 'AgeGroup_Very old']
+------------------------------------------------------------
+Client ID: 3
+Random seed used: 3
+Malicious client? ✅ YES
+Attack mode: 🎲 RANDOM
+Warmup rounds: 10
+Attack probability: 0.7
+Class distribution in this client:
+[75 65]
+Data shape before augmentation: (140, 23)
+------------------------------------------------------------
+✅ Client data augmented
+New shape: (2000, 23)
+New class distribution: [ 997 1003]
+------------------------------------------------------------
+Starting Federated Learning Client 3...
+⚠️  Malicious behavior (random) will activate after 10 warmup rounds
+Usage examples:
+  python fl_client.py 1 --malicious --random --warmup 10
+  python fl_client.py 2 --mal --rand --attack_probability 0.5
+  python fl_client.py 3 --malicious --warmup 20
+------------------------------------------------------------
+------------------------------------------------------------
+Round 0: Fitting model on client 3
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 0
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9312063808574277
+Predictions distribution: [ 963 1037]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 1: Fitting model on client 3
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 1
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9332003988035892
+Predictions distribution: [ 957 1043]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 2: Fitting model on client 3
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 2
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.93419740777667
+Predictions distribution: [ 955 1045]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 3: Fitting model on client 3
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 3
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.93419740777667
+Predictions distribution: [ 955 1045]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 4: Fitting model on client 3
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 4
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.93419740777667
+Predictions distribution: [ 955 1045]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 5: Fitting model on client 3
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 5
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.93419740777667
+Predictions distribution: [ 955 1045]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 6: Fitting model on client 3
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 6
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.93419740777667
+Predictions distribution: [ 955 1045]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 7: Fitting model on client 3
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 7
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.93419740777667
+Predictions distribution: [ 955 1045]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 8: Fitting model on client 3
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 8
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.93419740777667
+Predictions distribution: [ 955 1045]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 9: Fitting model on client 3
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 9
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.93419740777667
+Predictions distribution: [ 955 1045]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 10: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 10
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 1 attacks in 1 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9431704885343968
+Predictions distribution: [ 893 1107]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 11: Fitting model on client 3
+😇 Client 3: Behaving normally this round (random mode)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 11
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9451645064805583
+Predictions distribution: [ 944 1056]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 12: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 12
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 2 attacks in 2 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9461615154536391
+Predictions distribution: [ 860 1140]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 13: Fitting model on client 3
+😇 Client 3: Behaving normally this round (random mode)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 13
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.942173479561316
+Predictions distribution: [ 944 1056]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 14: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 14
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 3 attacks in 3 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9441674975074775
+Predictions distribution: [ 869 1131]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 15: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 15
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 4 attacks in 4 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9451645064805583
+Predictions distribution: [ 832 1168]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 16: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 16
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 5 attacks in 5 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9401794616151545
+Predictions distribution: [ 832 1168]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 17: Fitting model on client 3
+😇 Client 3: Behaving normally this round (random mode)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 17
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9441674975074775
+Predictions distribution: [ 921 1079]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 18: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 18
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 6 attacks in 6 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9351944167497508
+Predictions distribution: [ 938 1062]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 19: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 19
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 7 attacks in 7 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9312063808574277
+Predictions distribution: [ 940 1060]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 20: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 20
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 8 attacks in 8 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.93419740777667
+Predictions distribution: [ 934 1066]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 21: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 21
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 9 attacks in 9 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9351944167497508
+Predictions distribution: [ 930 1070]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 22: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 22
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 10 attacks in 10 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9351944167497508
+Predictions distribution: [ 930 1070]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 23: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 23
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 11 attacks in 11 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9361914257228315
+Predictions distribution: [ 931 1069]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 24: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 24
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 12 attacks in 12 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9371884346959123
+Predictions distribution: [ 929 1071]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 25: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 25
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 13 attacks in 13 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9371884346959123
+Predictions distribution: [ 929 1071]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 26: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 26
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 14 attacks in 14 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9371884346959123
+Predictions distribution: [ 930 1070]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 27: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 27
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 15 attacks in 15 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9371884346959123
+Predictions distribution: [ 930 1070]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+------------------------------------------------------------
+Round 28: Fitting model on client 3
+😇 Client 3: Behaving normally this round (random mode)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 28
+😇 Normal labels distribution: [ 997 1003]
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9371884346959123
+Predictions distribution: [ 930 1070]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: False
+------------------------------------------------------------
+------------------------------------------------------------
+Round 29: Fitting model on client 3
+⚠️  Client 3: Random malicious attack triggered (prob: 0.7)
+Epoch 1/5
+Epoch 2/5
+Epoch 3/5
+Epoch 4/5
+Epoch 5/5
+✅ Client 3: Training completed for round 29
+🔥 Malicious labels distribution: [1003  997]
+📊 Attack stats: 16 attacks in 16 rounds
+------------------------------------------------------------
+Evaluating model on client 3 data...
+Client 3 Recall Score: 0.9371884346959123
+Predictions distribution: [ 930 1070]
+True labels distribution: [ 997 1003]
+⚠️  Malicious client - Attack active: True
+------------------------------------------------------------
+📝 Client 3 logs saved to logs/ directory
